@@ -4,17 +4,41 @@ body {
     font-family: "Inter", Helvetica, "Segoe UI", sans-serif;
 }
 
-/* Navbar cart badge — logical positioning so it hugs the icon in LTR *and*
-   RTL (M1.2). inset-inline-start maps to left (LTR) / right (RTL); the RTL
-   transform flips the half-width nudge to the opposite corner. */
+/* Navbar cart button (M1.2): mirror the circular profile button's size/shape
+   and anchor the item-count badge to THIS button (position: relative) so it
+   never escapes onto the neighbouring profile button. */
+.cart-btn {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Item-count badge. Logical inset props flip for RTL automatically —
+   inset-inline-end maps to right (LTR) / left (RTL) — so the badge hugs the
+   icon's upper-OUTER corner in both languages with no transform/flip. The
+   small overhang keeps it snug to the icon instead of spilling into the gap
+   and colliding with the profile button. */
 .cart-badge {
     position: absolute;
-    top: 0;
-    inset-inline-start: 100%;
-    transform: translate(-50%, -50%);
+    inset-block-start: -0.25rem;
+    inset-inline-end: -0.25rem;
+    z-index: 3;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    padding: 0 0.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 999px;
+    /* Ring in the header background colour detaches the badge from the icon
+       so the two never read as one blob, and keeps it legible on hover. */
+    box-shadow: 0 0 0 2px var(--bs-body-bg);
 }
-[dir="rtl"] .cart-badge {
-    transform: translate(50%, -50%);
+/* d-none (empty cart) must still win over the flex display above. */
+.cart-badge.d-none {
+    display: none !important;
 }
 
 /* Hero (M4.1): full viewport height minus the sticky navbar, background photo

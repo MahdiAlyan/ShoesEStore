@@ -53,7 +53,7 @@
                 </form>
 
                 {# Cart badge #}
-                <a href="{{ cart_url|default:'/cart/' }}" class="btn btn-icon btn-light position-relative" aria-label="{% trans 'Cart' %}">
+                <a href="{{ cart_url|default:'/cart/' }}" class="btn btn-icon btn-light rounded-circle position-relative cart-btn" aria-label="{% trans 'Cart' %}">
                     <i class="ki-duotone ki-handcart fs-2"><span class="path1"></span><span class="path2"></span></i>
                     <span id="cart-badge" class="cart-badge badge badge-circle badge-primary {% if not cart_count %}d-none{% endif %}">{{ cart_count }}</span>
                 </a>

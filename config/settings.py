@@ -5,6 +5,7 @@ Env-driven. Reads a local .env via python-dotenv when present. Never commit .env
 SQLite is used automatically when DATABASE_URL is empty (demo/PythonAnywhere).
 """
 import os
+import re
 from pathlib import Path
 
 import dj_database_url
@@ -87,14 +88,14 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # --- Database ---------------------------------------------------------------
 # DATABASE_URL empty/unset -> SQLite fallback (demo). Set to postgres://... in
-# prod. dj_database_url.config() only falls back on an *unset* var, so a bare
-# `DATABASE_URL=` line would otherwise crash — normalize empty/whitespace here.
+# prod. Only honor the value when it's a real URL with a scheme (e.g.
+# `postgres://`); a blank line or a stray inline comment leaking in from .env
+# must fall back to SQLite rather than crash the parser.
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+if not re.match(r"^[a-zA-Z][a-zA-Z0-9+.\-]*://", DATABASE_URL):
+    DATABASE_URL = f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
 DATABASES = {
-    "default": dj_database_url.parse(
-        DATABASE_URL or f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-    )
+    "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
 }
 
 # --- Auth -------------------------------------------------------------------
