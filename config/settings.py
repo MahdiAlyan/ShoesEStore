@@ -86,10 +86,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 # --- Database ---------------------------------------------------------------
-# DATABASE_URL empty -> SQLite fallback (demo). Set to postgres://... in prod.
+# DATABASE_URL empty/unset -> SQLite fallback (demo). Set to postgres://... in
+# prod. dj_database_url.config() only falls back on an *unset* var, so a bare
+# `DATABASE_URL=` line would otherwise crash — normalize empty/whitespace here.
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+    "default": dj_database_url.parse(
+        DATABASE_URL or f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
     )
 }
