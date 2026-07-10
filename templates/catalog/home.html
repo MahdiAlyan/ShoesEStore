@@ -1,0 +1,30 @@
+{% extends "base_store.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "ShoeStore" %} — {% trans "Quality shoes, cash on delivery" %}{% endblock %}
+
+{% block content %}
+<section class="py-15" style="background:linear-gradient(135deg,#1b1b29,#2b2b40)">
+    <div class="container-xxl text-center text-white py-10">
+        <h1 class="display-4 fw-bold mb-4">{% trans "Step into quality" %}</h1>
+        <p class="fs-4 text-gray-300 mb-8">{% trans "Browse our collection and pay on delivery." %}</p>
+        {% url 'catalog:product_list' as products_url %}
+        <a href="{{ products_url|default:'/products/' }}" class="btn btn-lg btn-primary">{% trans "Shop now" %}</a>
+    </div>
+</section>
+
+<section class="container-xxl py-10">
+    <h2 class="fs-2 fw-bold mb-6">{% trans "Featured shoes" %}</h2>
+    {% if featured_products %}
+        <div class="row g-6">
+            {% for product in featured_products %}
+                {% include "catalog/_product_card.html" with product=product %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center text-muted py-10">
+            <p class="fs-5">{% trans "Featured products will appear here soon." %}</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

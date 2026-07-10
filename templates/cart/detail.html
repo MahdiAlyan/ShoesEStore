@@ -1,0 +1,83 @@
+{% extends "base_store.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Your cart" %} — {% trans "ShoeStore" %}{% endblock %}
+
+{% block content %}
+<div class="container-xxl py-8">
+    <h1 class="fs-2 fw-bold mb-6">{% trans "Your cart" %}</h1>
+
+    {% if items %}
+    <div class="row g-6">
+        <div class="col-lg-8">
+            <div class="card border">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0" id="cart-table">
+                        <thead class="border-bottom">
+                            <tr class="fw-bold text-muted">
+                                <th class="ps-5">{% trans "Product" %}</th>
+                                <th>{% trans "Price" %}</th>
+                                <th style="width:140px">{% trans "Qty" %}</th>
+                                <th>{% trans "Total" %}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr data-row-id="{{ item.id }}">
+                                <td class="ps-5">
+                                    <div class="d-flex align-items-center gap-3">
+                                        {% with img=item.variant.product.main_image %}
+                                            {% if img %}<img src="{{ img.image.url }}" style="width:56px;height:56px;object-fit:cover" class="rounded" alt="{{ item.variant.product.name }}" />{% endif %}
+                                        {% endwith %}
+                                        <div>
+                                            <a href="{{ item.variant.product.get_absolute_url }}" class="fw-semibold text-gray-900">{{ item.variant.product.name }}</a>
+                                            <div class="fs-7 text-muted">{{ item.variant.color.name }} · {% trans "Size" %} {{ item.variant.size.value }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${{ item.unit_price }}</td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm cart-qty" style="width:90px"
+                                           value="{{ item.quantity }}" min="1" max="{{ item.variant.stock }}"
+                                           data-item-id="{{ item.id }}" aria-label="{% trans 'Quantity' %}" />
+                                </td>
+                                <td class="fw-bold line-total" data-item-id="{{ item.id }}">${{ item.line_total }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-icon btn-light-danger btn-sm cart-remove" data-item-id="{{ item.id }}" aria-label="{% trans 'Remove' %}">
+                                        <i class="ki-duotone ki-trash fs-4"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border">
+                <div class="card-body">
+                    <h2 class="fs-4 fw-bold mb-4">{% trans "Order summary" %}</h2>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">{% trans "Subtotal" %}</span>
+                        <span class="fw-bold" id="cart-subtotal">${{ cart.subtotal }}</span>
+                    </div>
+                    <div class="text-muted fs-7 mb-4">{% trans "Delivery is calculated at checkout." %}</div>
+                    {% url 'orders:checkout' as checkout_url %}
+                    <a href="{{ checkout_url|default:'/orders/checkout/' }}" class="btn btn-primary w-100">{% trans "Proceed to checkout" %}</a>
+                    <a href="{% url 'catalog:product_list' %}" class="btn btn-light w-100 mt-2">{% trans "Continue shopping" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center text-muted py-20" id="cart-empty">
+        <i class="ki-duotone ki-handcart fs-4x mb-4"><span class="path1"></span><span class="path2"></span></i>
+        <p class="fs-4">{% trans "Your cart is empty." %}</p>
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">{% trans "Start shopping" %}</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+/* ShoeStore custom styles (layered on top of Metronic Demo 2). */
+
+body {
+    font-family: "Inter", Helvetica, "Segoe UI", sans-serif;
+}
+
+/* Product card */
+.product-card .product-thumb {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    width: 100%;
+    background: #f5f5f7;
+}
+
+/* Variant picker */
+.size-btn.disabled,
+.size-btn:disabled {
+    opacity: 0.4;
+    text-decoration: line-through;
+    pointer-events: none;
+}
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    display: inline-block;
+}
+.color-swatch.active {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 2px #fff inset;
+}
+
+/* Visible focus for accessibility */
+a:focus-visible,
+button:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+/* Status badges */
+.status-PENDING { background: #f1c40f; color: #000; }
+.status-CONFIRMED { background: #3498db; color: #fff; }
+.status-OUT_FOR_DELIVERY { background: #9b59b6; color: #fff; }
+.status-DELIVERED { background: #2ecc71; color: #fff; }
+.status-CANCELLED { background: #e74c3c; color: #fff; }
+.status-RETURNED { background: #95a5a6; color: #fff; }

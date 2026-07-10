@@ -1,0 +1,119 @@
+{% load i18n static %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" data-bs-theme="light" data-bs-theme-mode="light">
+<head>
+    <title>{% block title %}{% trans "ShoeStore" %}{% endblock %}</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="{% block meta_description %}{% trans "Quality shoes with cash on delivery." %}{% endblock %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <link href="{% static 'metronic/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'metronic/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css" />
+    {% if LANGUAGE_BIDI %}<link href="{% static 'css/rtl.css' %}" rel="stylesheet" type="text/css" />{% endif %}
+    {% block extra_css %}{% endblock %}
+</head>
+<body id="kt_body" class="app-blank">
+<div class="d-flex flex-column flex-root">
+    {% url 'catalog:home' as home_url %}
+    {% url 'catalog:product_list' as products_url %}
+    {% url 'cart:detail' as cart_url %}
+    {% url 'orders:my_orders' as my_orders_url %}
+    {% url 'accounts:login' as login_url %}
+    {% url 'accounts:signup' as signup_url %}
+    {% url 'accounts:logout' as logout_url %}
+    {% url 'dashboard:overview' as dashboard_url %}
+
+    {# ===== Header ===== #}
+    <header class="bg-body border-bottom sticky-top">
+        <div class="container-xxl d-flex align-items-center justify-content-between py-3">
+            <a href="{{ home_url }}" class="d-flex align-items-center text-decoration-none">
+                <i class="ki-duotone ki-basket fs-2x text-primary me-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                <span class="fs-2 fw-bold text-gray-900">{% trans "ShoeStore" %}</span>
+            </a>
+
+            <nav class="d-none d-lg-flex align-items-center gap-4">
+                <a href="{{ products_url|default:'/products/' }}" class="menu-link fw-semibold text-gray-800">{% trans "All Shoes" %}</a>
+                {% for cat in nav_categories %}
+                    <a href="{{ products_url|default:'/products/' }}?category={{ cat.slug }}" class="menu-link fw-semibold text-gray-700">{{ cat.name }}</a>
+                {% endfor %}
+            </nav>
+
+            <div class="d-flex align-items-center gap-2 gap-lg-3">
+                {# Language switcher #}
+                {% get_current_language as CUR_LANG %}
+                <form action="{% url 'set_language' %}" method="post" class="d-flex align-items-center">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.path }}" />
+                    <select name="language" class="form-select form-select-sm w-auto" onchange="this.form.submit()" aria-label="{% trans 'Language' %}">
+                        {% get_available_languages as LANGS %}
+                        {% for code, name in LANGS %}
+                            <option value="{{ code }}" {% if code == CUR_LANG %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+
+                {# Cart badge #}
+                <a href="{{ cart_url|default:'/cart/' }}" class="btn btn-icon btn-light position-relative" aria-label="{% trans 'Cart' %}">
+                    <i class="ki-duotone ki-handcart fs-2"><span class="path1"></span><span class="path2"></span></i>
+                    <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary {% if not cart_count %}d-none{% endif %}">{{ cart_count }}</span>
+                </a>
+
+                {# Account menu #}
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-light d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ki-duotone ki-profile-circle fs-2 me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                            <span class="d-none d-md-inline text-truncate" style="max-width:140px">{{ user.email }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ my_orders_url|default:'/orders/mine/' }}">{% trans "My Orders" %}</a></li>
+                            {% if user.is_staff %}<li><a class="dropdown-item" href="{{ dashboard_url|default:'/dashboard/' }}">{% trans "Dashboard" %}</a></li>{% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{{ logout_url|default:'/accounts/logout/' }}" method="post" class="px-3">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-light-danger w-100">{% trans "Log out" %}</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{{ login_url|default:'/accounts/login/' }}" class="btn btn-sm btn-light">{% trans "Log in" %}</a>
+                    <a href="{{ signup_url|default:'/accounts/signup/' }}" class="btn btn-sm btn-primary d-none d-sm-inline-flex">{% trans "Sign up" %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    {# Flash messages #}
+    {% if messages %}
+        <div class="container-xxl mt-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'primary' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Close' %}"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-dark text-gray-400 mt-10 py-8">
+        <div class="container-xxl d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+            <span>© {% now "Y" %} {% trans "ShoeStore" %}. {% trans "All rights reserved." %}</span>
+            <span class="text-muted">{% trans "Cash on Delivery available." %}</span>
+        </div>
+    </footer>
+</div>
+
+<script>window.CSRF_TOKEN = "{{ csrf_token }}";</script>
+<script src="{% static 'metronic/plugins/global/plugins.bundle.js' %}"></script>
+<script src="{% static 'metronic/js/scripts.bundle.js' %}"></script>
+<script src="{% static 'js/cart.js' %}"></script>
+{% if TURNSTILE_ENABLED %}<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>{% endif %}
+{% block extra_js %}{% endblock %}
+</body>
+</html>

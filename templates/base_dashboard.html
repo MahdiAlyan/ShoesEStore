@@ -1,0 +1,87 @@
+{% load i18n static %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" data-bs-theme="light" data-bs-theme-mode="light">
+<head>
+    <title>{% block title %}{% trans "Dashboard" %} · {% trans "ShoeStore" %}{% endblock %}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <link href="{% static 'metronic/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'metronic/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css" />
+    {% if LANGUAGE_BIDI %}<link href="{% static 'css/rtl.css' %}" rel="stylesheet" type="text/css" />{% endif %}
+    {% block extra_css %}{% endblock %}
+</head>
+<body id="kt_body" class="app-blank">
+{% url 'dashboard:overview' as dash_overview %}
+{% url 'dashboard:products' as dash_products %}
+{% url 'dashboard:categories' as dash_categories %}
+{% url 'dashboard:regions' as dash_regions %}
+{% url 'dashboard:orders' as dash_orders %}
+{% url 'catalog:home' as store_home %}
+{% url 'accounts:logout' as logout_url %}
+<div class="d-flex flex-row flex-column-fluid" style="min-height:100vh">
+    {# ===== Sidebar ===== #}
+    <aside class="d-flex flex-column flex-shrink-0 bg-dark text-white p-4" style="width:260px" id="dash_sidebar">
+        <a href="{{ dash_overview|default:'/dashboard/' }}" class="d-flex align-items-center text-white text-decoration-none mb-8">
+            <i class="ki-duotone ki-basket fs-2x text-primary me-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+            <span class="fs-3 fw-bold">{% trans "ShoeStore" %}</span>
+        </a>
+        <ul class="nav nav-pills flex-column gap-1 mb-auto">
+            <li class="nav-item"><a href="{{ dash_overview|default:'/dashboard/' }}" class="nav-link text-white {% if active_nav == 'overview' %}active{% endif %}">{% trans "Overview" %}</a></li>
+            <li class="nav-item"><a href="{{ dash_products|default:'/dashboard/products/' }}" class="nav-link text-white {% if active_nav == 'products' %}active{% endif %}">{% trans "Products" %}</a></li>
+            <li class="nav-item"><a href="{{ dash_categories|default:'/dashboard/categories/' }}" class="nav-link text-white {% if active_nav == 'categories' %}active{% endif %}">{% trans "Categories" %}</a></li>
+            <li class="nav-item"><a href="{{ dash_regions|default:'/dashboard/regions/' }}" class="nav-link text-white {% if active_nav == 'regions' %}active{% endif %}">{% trans "Regions" %}</a></li>
+            <li class="nav-item"><a href="{{ dash_orders|default:'/dashboard/orders/' }}" class="nav-link text-white {% if active_nav == 'orders' %}active{% endif %}">{% trans "Orders" %}</a></li>
+        </ul>
+        <div class="mt-8">
+            <a href="{{ store_home }}" class="btn btn-sm btn-light-primary w-100 mb-2">{% trans "View store" %}</a>
+        </div>
+    </aside>
+
+    {# ===== Content ===== #}
+    <div class="d-flex flex-column flex-grow-1 bg-light-subtle" style="min-width:0">
+        <header class="d-flex align-items-center justify-content-between bg-body border-bottom px-6 py-4">
+            <button class="btn btn-icon btn-light d-lg-none" type="button" onclick="document.getElementById('dash_sidebar').classList.toggle('d-none')" aria-label="{% trans 'Toggle menu' %}">
+                <i class="ki-duotone ki-abstract-14 fs-2"><span class="path1"></span><span class="path2"></span></i>
+            </button>
+            <h1 class="fs-3 fw-bold m-0">{% block page_title %}{% trans "Dashboard" %}{% endblock %}</h1>
+            <div class="d-flex align-items-center gap-2">
+                {% get_current_language as CUR_LANG %}
+                <form action="{% url 'set_language' %}" method="post" class="d-flex">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.path }}" />
+                    <select name="language" class="form-select form-select-sm w-auto" onchange="this.form.submit()" aria-label="{% trans 'Language' %}">
+                        {% get_available_languages as LANGS %}
+                        {% for code, name in LANGS %}<option value="{{ code }}" {% if code == CUR_LANG %}selected{% endif %}>{{ name }}</option>{% endfor %}
+                    </select>
+                </form>
+                <span class="text-muted d-none d-md-inline">{{ user.email }}</span>
+                <form action="{{ logout_url|default:'/accounts/logout/' }}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-light-danger">{% trans "Log out" %}</button>
+                </form>
+            </div>
+        </header>
+
+        {% if messages %}
+            <div class="px-6 pt-4">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'primary' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Close' %}"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <main class="p-6 flex-grow-1">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</div>
+<script>window.CSRF_TOKEN = "{{ csrf_token }}";</script>
+<script src="{% static 'metronic/plugins/global/plugins.bundle.js' %}"></script>
+<script src="{% static 'metronic/js/scripts.bundle.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

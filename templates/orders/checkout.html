@@ -1,0 +1,130 @@
+{% extends "base_store.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Checkout" %} — {% trans "ShoeStore" %}{% endblock %}
+
+{% block content %}
+<div class="container-xxl py-8">
+    <h1 class="fs-2 fw-bold mb-6">{% trans "Checkout" %}</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row g-6">
+            {# ===== Delivery + payment ===== #}
+            <div class="col-lg-7">
+                <div class="card border mb-6">
+                    <div class="card-body">
+                        <h2 class="fs-4 fw-bold mb-5">{% trans "Delivery details" %}</h2>
+
+                        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+
+                        <div class="mb-5">
+                            <label class="form-label fw-semibold" for="{{ form.receiver_name.id_for_label }}">{{ form.receiver_name.label }}</label>
+                            {{ form.receiver_name }}
+                            {% for e in form.receiver_name.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label fw-semibold" for="{{ form.receiver_phone.id_for_label }}">{{ form.receiver_phone.label }}</label>
+                            {{ form.receiver_phone }}
+                            <div class="form-text">{{ form.receiver_phone.help_text }}</div>
+                            {% for e in form.receiver_phone.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label fw-semibold" for="{{ form.region.id_for_label }}">{{ form.region.label }}</label>
+                            <select name="region" id="id_region" class="form-select" data-fees>
+                                <option value="">{% trans "Select a region" %}</option>
+                                {% for r in regions %}
+                                    <option value="{{ r.id }}" data-fee="{{ r.delivery_fee }}"
+                                        {% if form.region.value|stringformat:'s' == r.id|stringformat:'s' %}selected{% endif %}>
+                                        {{ r.name }} — ${{ r.delivery_fee }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% for e in form.region.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label fw-semibold" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                            {{ form.address }}
+                            {% for e in form.address.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border">
+                    <div class="card-body">
+                        <h2 class="fs-4 fw-bold mb-5">{% trans "Payment method" %}</h2>
+                        <label class="d-flex align-items-center gap-3 border rounded p-4 mb-3 cursor-pointer">
+                            <input type="radio" name="payment_method" value="COD" class="form-check-input m-0" checked />
+                            <span>
+                                <span class="fw-bold d-block">{% trans "Cash on Delivery" %}</span>
+                                <span class="text-muted fs-7">{% trans "Pay in cash when your order arrives." %}</span>
+                            </span>
+                        </label>
+                        <label class="d-flex align-items-center gap-3 border rounded p-4 cursor-pointer">
+                            <input type="radio" name="payment_method" value="ONLINE" class="form-check-input m-0" />
+                            <span>
+                                <span class="fw-bold d-block">{% trans "Online Payment" %}</span>
+                                <span class="text-muted fs-7">{% trans "Card payment (coming soon)." %}</span>
+                            </span>
+                        </label>
+                        {% include "partials/_turnstile.html" %}
+                    </div>
+                </div>
+            </div>
+
+            {# ===== Summary ===== #}
+            <div class="col-lg-5">
+                <div class="card border">
+                    <div class="card-body">
+                        <h2 class="fs-4 fw-bold mb-5">{% trans "Order summary" %}</h2>
+                        <div class="mb-4">
+                            {% for item in items %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-gray-700">{{ item.variant.product.name }}
+                                        <span class="text-muted fs-8">{{ item.variant.color.name }} · {{ item.variant.size.value }} × {{ item.quantity }}</span>
+                                    </span>
+                                    <span class="fw-semibold">${{ item.line_total }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="separator my-3"></div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">{% trans "Subtotal" %}</span>
+                            <span class="fw-semibold">${{ cart.subtotal }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">{% trans "Delivery" %}</span>
+                            <span class="fw-semibold" id="summary-delivery">$0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between fs-4 fw-bold mt-3">
+                            <span>{% trans "Total" %}</span>
+                            <span id="summary-total">${{ cart.subtotal }}</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-5">{% trans "Place order" %}</button>
+                        <a href="{% url 'cart:detail' %}" class="btn btn-light w-100 mt-2">{% trans "Back to cart" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var subtotal = parseFloat("{{ cart.subtotal|stringformat:'f' }}") || 0;
+    var region = document.getElementById("id_region");
+    var deliveryEl = document.getElementById("summary-delivery");
+    var totalEl = document.getElementById("summary-total");
+    function fmt(n) { return "$" + n.toFixed(2); }
+    function update() {
+        var opt = region.options[region.selectedIndex];
+        var fee = opt ? parseFloat(opt.getAttribute("data-fee") || "0") : 0;
+        if (isNaN(fee)) fee = 0;
+        deliveryEl.textContent = fmt(fee);
+        totalEl.textContent = fmt(subtotal + fee);
+    }
+    if (region) { region.addEventListener("change", update); update(); }
+})();
+</script>
+{% endblock %}

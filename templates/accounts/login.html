@@ -1,0 +1,24 @@
+{% extends "accounts/auth_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Log in" %} — {% trans "ShoeStore" %}{% endblock %}
+{% block auth_title %}{% trans "Log in" %}{% endblock %}
+{% block auth_subtitle %}
+    <span class="text-muted">{% trans "New here?" %}
+        <a href="{% url 'accounts:signup' %}{% if next %}?next={{ next }}{% endif %}">{% trans "Create an account" %}</a>
+    </span>
+{% endblock %}
+
+{% block auth_form %}
+<form method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
+    {% include "accounts/_field.html" with field=form.username %}
+    {% include "accounts/_field.html" with field=form.password %}
+    {% include "partials/_turnstile.html" %}
+    <div class="d-flex justify-content-end mb-5">
+        <a href="{% url 'accounts:password_reset' %}" class="fs-7">{% trans "Forgot password?" %}</a>
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg w-100">{% trans "Log in" %}</button>
+</form>
+{% endblock %}

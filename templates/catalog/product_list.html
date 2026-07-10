@@ -1,0 +1,99 @@
+{% extends "base_store.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "All Shoes" %} — {% trans "ShoeStore" %}{% endblock %}
+
+{% block content %}
+<div class="container-xxl py-8">
+    <h1 class="fs-2 fw-bold mb-6">{% trans "All Shoes" %}</h1>
+    <div class="row g-6">
+        {# ===== Filters sidebar ===== #}
+        <aside class="col-lg-3">
+            <form method="get" class="card border p-5">
+                <h2 class="fs-5 fw-bold mb-4">{% trans "Filters" %}</h2>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold" for="f-category">{% trans "Category" %}</label>
+                    <select name="category" id="f-category" class="form-select">
+                        <option value="">{% trans "All categories" %}</option>
+                        {% for c in categories %}
+                            <option value="{{ c.slug }}" {% if active.category == c.slug %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold" for="f-color">{% trans "Color" %}</label>
+                    <select name="color" id="f-color" class="form-select">
+                        <option value="">{% trans "Any color" %}</option>
+                        {% for c in colors %}
+                            <option value="{{ c.id }}" {% if active.color == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold" for="f-size">{% trans "Size" %}</label>
+                    <select name="size" id="f-size" class="form-select">
+                        <option value="">{% trans "Any size" %}</option>
+                        {% for s in sizes %}
+                            <option value="{{ s.id }}" {% if active.size == s.id|stringformat:'s' %}selected{% endif %}>{{ s.value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="row g-2 mb-4">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold" for="f-min">{% trans "Min $" %}</label>
+                        <input type="number" step="0.01" min="0" name="min_price" id="f-min" class="form-control" value="{{ active.min_price }}" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold" for="f-max">{% trans "Max $" %}</label>
+                        <input type="number" step="0.01" min="0" name="max_price" id="f-max" class="form-control" value="{{ active.max_price }}" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mb-2">{% trans "Apply filters" %}</button>
+                <a href="{% url 'catalog:product_list' %}" class="btn btn-light w-100">{% trans "Clear" %}</a>
+            </form>
+        </aside>
+
+        {# ===== Product grid ===== #}
+        <div class="col-lg-9">
+            {% if products %}
+                <div class="row g-6">
+                    {% for product in products %}
+                        {% include "catalog/_product_card.html" with product=product %}
+                    {% endfor %}
+                </div>
+
+                {% if page_obj.paginator.num_pages > 1 %}
+                    <nav class="mt-8" aria-label="{% trans 'Pagination' %}">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if filter_qs %}&{{ filter_qs }}{% endif %}">{% trans "Previous" %}</a></li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">{% trans "Previous" %}</span></li>
+                            {% endif %}
+                            {% for num in page_obj.paginator.page_range %}
+                                <li class="page-item {% if num == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{ num }}{% if filter_qs %}&{{ filter_qs }}{% endif %}">{{ num }}</a></li>
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if filter_qs %}&{{ filter_qs }}{% endif %}">{% trans "Next" %}</a></li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">{% trans "Next" %}</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="text-center text-muted py-20">
+                    <i class="ki-duotone ki-magnifier fs-4x mb-4"><span class="path1"></span><span class="path2"></span></i>
+                    <p class="fs-4">{% trans "No shoes match your filters." %}</p>
+                    <a href="{% url 'catalog:product_list' %}" class="btn btn-light-primary">{% trans "Clear filters" %}</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

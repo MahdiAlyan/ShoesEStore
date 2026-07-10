@@ -1,0 +1,17 @@
+{% load i18n static %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+<head>
+    <title>{% trans "Server error" %} — {% trans "ShoeStore" %}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="{% static 'metronic/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-blank">
+<div class="container text-center py-20">
+    <h1 class="display-1 fw-bold text-danger">500</h1>
+    <p class="fs-3 fw-semibold">{% trans "Something went wrong on our end." %}</p>
+    <p class="fs-5 text-muted mb-8">{% trans "Please try again in a moment." %}</p>
+    <a href="/" class="btn btn-primary">{% trans "Back to home" %}</a>
+</div>
+</body>
+</html>

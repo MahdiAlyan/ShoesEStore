@@ -1,0 +1,6 @@
+{% comment %}Cloudflare Turnstile widget — rendered only when enabled.{% endcomment %}
+{% if TURNSTILE_ENABLED %}
+    <div class="mb-5">
+        <div class="cf-turnstile" data-sitekey="{{ TURNSTILE_SITE_KEY }}"></div>
+    </div>
+{% endif %}

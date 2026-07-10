@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+/media/
+/staticfiles/
+*.mo
+
+# Secrets — NEVER commit
+.env
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Metronic source extraction (duplicate of theme_static/metronic, which is served)
+metronic_html_v8.2.7_demo2/
+
+# Project brief (not part of the app)
+prompt.md

@@ -1,0 +1,862 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ShoeStore 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);\n"
+
+msgid "Account"
+msgstr "الحساب"
+
+msgid "Active"
+msgstr "مفعّل"
+
+msgid "Add a blank row's fields to create a new variant."
+msgstr "املأ حقول صف فارغ لإنشاء صنف جديد."
+
+msgid "Add category"
+msgstr "إضافة فئة"
+
+msgid "Add region"
+msgstr "إضافة منطقة"
+
+msgid "Add to cart"
+msgstr "أضف إلى السلة"
+
+msgid "Added to cart."
+msgstr "تمت الإضافة إلى السلة."
+
+msgid "Address"
+msgstr "العنوان"
+
+msgid "All Shoes"
+msgstr "كل الأحذية"
+
+msgid "All categories"
+msgstr "كل الفئات"
+
+msgid "All rights reserved."
+msgstr "جميع الحقوق محفوظة."
+
+msgid "All statuses"
+msgstr "كل الحالات"
+
+msgid "All variants well stocked."
+msgstr "جميع الأصناف بمخزون جيد."
+
+msgid "Already have an account?"
+msgstr "لديك حساب بالفعل؟"
+
+msgid "An account with this email already exists."
+msgstr "يوجد حساب مسجّل بهذا البريد الإلكتروني بالفعل."
+
+msgid "An email address is required."
+msgstr "البريد الإلكتروني مطلوب."
+
+msgid "Any color"
+msgstr "أي لون"
+
+msgid "Any size"
+msgstr "أي مقاس"
+
+msgid "Apply filters"
+msgstr "تطبيق التصفية"
+
+msgid "Back to Cash on Delivery"
+msgstr "العودة إلى الدفع عند الاستلام"
+
+msgid "Back to cart"
+msgstr "العودة إلى السلة"
+
+msgid "Back to home"
+msgstr "العودة إلى الرئيسية"
+
+msgid "Back to log in"
+msgstr "العودة إلى تسجيل الدخول"
+
+msgid "Browse our collection and pay on delivery."
+msgstr "تصفّح مجموعتنا وادفع عند الاستلام."
+
+msgid "CVV"
+msgstr "رمز التحقق"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Cancelled"
+msgstr "ملغى"
+
+msgid "Cancelling an order restocks its items."
+msgstr "إلغاء الطلب يعيد عناصره إلى المخزون."
+
+msgid "Cannot delete a category that still has products."
+msgstr "لا يمكن حذف فئة لا تزال تحتوي على منتجات."
+
+msgid "Cannot delete a region that still has orders."
+msgstr "لا يمكن حذف منطقة لا تزال لديها طلبات."
+
+msgid "Card details"
+msgstr "تفاصيل البطاقة"
+
+msgid "Card number"
+msgstr "رقم البطاقة"
+
+msgid "Card payment (coming soon)."
+msgstr "الدفع بالبطاقة (قريباً)."
+
+msgid "Cart"
+msgstr "السلة"
+
+msgid "Cash on Delivery"
+msgstr "الدفع عند الاستلام"
+
+msgid "Cash on Delivery available."
+msgstr "الدفع عند الاستلام متاح."
+
+msgid "Categories"
+msgstr "الفئات"
+
+msgid "Category"
+msgstr "الفئة"
+
+msgid "Category deleted."
+msgstr "تم حذف الفئة."
+
+msgid "Category saved."
+msgstr "تم حفظ الفئة."
+
+msgid "Change password"
+msgstr "تغيير كلمة المرور"
+
+msgid "Change status"
+msgstr "تغيير الحالة"
+
+msgid "Check your email"
+msgstr "تحقق من بريدك الإلكتروني"
+
+msgid "Checkout"
+msgstr "الدفع"
+
+msgid "Clear"
+msgstr "مسح"
+
+msgid "Clear filters"
+msgstr "مسح عوامل التصفية"
+
+msgid "Click the link below to choose a new password:"
+msgstr "انقر على الرابط أدناه لاختيار كلمة مرور جديدة:"
+
+msgid "Close"
+msgstr "إغلاق"
+
+msgid "Color"
+msgstr "اللون"
+
+msgid "Confirm on WhatsApp"
+msgstr "التأكيد عبر واتساب"
+
+msgid "Confirmed"
+msgstr "مؤكّد"
+
+msgid "Continue shopping"
+msgstr "متابعة التسوق"
+
+msgid "Create an account"
+msgstr "إنشاء حساب"
+
+msgid "Create your account"
+msgstr "أنشئ حسابك"
+
+msgid "Customer"
+msgstr "العميل"
+
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+msgid "Date"
+msgstr "التاريخ"
+
+msgid "Del"
+msgstr "حذف"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "Delete this category?"
+msgstr "حذف هذه الفئة؟"
+
+msgid "Delete this product?"
+msgstr "حذف هذا المنتج؟"
+
+msgid "Delete this region?"
+msgstr "حذف هذه المنطقة؟"
+
+msgid "Delivered"
+msgstr "تم التسليم"
+
+msgid "Delivery"
+msgstr "التوصيل"
+
+msgid "Delivery address"
+msgstr "عنوان التوصيل"
+
+msgid "Delivery details"
+msgstr "تفاصيل التوصيل"
+
+msgid "Delivery is calculated at checkout."
+msgstr "تُحتسب رسوم التوصيل عند الدفع."
+
+msgid "Delivery region"
+msgstr "منطقة التوصيل"
+
+msgid "Details"
+msgstr "التفاصيل"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Edit product"
+msgstr "تعديل المنتج"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "Enter a valid phone number (7–15 digits, optional +)."
+msgstr "أدخل رقم هاتف صالحاً (7–15 رقماً، مع + اختياري)."
+
+msgid "Enter your email and we'll send a reset link."
+msgstr "أدخل بريدك الإلكتروني وسنرسل رابط إعادة التعيين."
+
+msgid "Expiry"
+msgstr "تاريخ الانتهاء"
+
+msgid "Featured products will appear here soon."
+msgstr "ستظهر المنتجات المميزة هنا قريباً."
+
+msgid "Featured shoes"
+msgstr "أحذية مميزة"
+
+msgid "Fee"
+msgstr "الرسوم"
+
+msgid "Filters"
+msgstr "عوامل التصفية"
+
+msgid "First name"
+msgstr "الاسم الأول"
+
+msgid "Forgot password?"
+msgstr "هل نسيت كلمة المرور؟"
+
+msgid "Hello,"
+msgstr "مرحباً،"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid ""
+"If an account exists for that email, we've sent password reset instructions."
+" Please check your inbox."
+msgstr ""
+"إذا كان هناك حساب مرتبط بهذا البريد، فقد أرسلنا تعليمات إعادة تعيين كلمة "
+"المرور. الرجاء التحقق من بريدك."
+
+msgid "If you did not request this, you can safely ignore this email."
+msgstr "إذا لم تطلب ذلك، يمكنك تجاهل هذا البريد بأمان."
+
+msgid "Image is too large (max %(mb)d MB)."
+msgstr "الصورة كبيرة جداً (بحد أقصى %(mb)d ميغابايت)."
+
+msgid "Images"
+msgstr "الصور"
+
+msgid "Important dates"
+msgstr "تواريخ مهمة"
+
+msgid "In stock"
+msgstr "متوفر"
+
+msgid "Invalid quantity."
+msgstr "كمية غير صالحة."
+
+msgid "Invalid region."
+msgstr "منطقة غير صالحة."
+
+msgid "Invalid status change."
+msgstr "تغيير حالة غير صالح."
+
+msgid "Invalid status."
+msgstr "حالة غير صالحة."
+
+msgid "Items"
+msgstr "العناصر"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Last name"
+msgstr "اسم العائلة"
+
+msgid "Log in"
+msgstr "تسجيل الدخول"
+
+msgid "Log out"
+msgstr "تسجيل الخروج"
+
+msgid "Low stock"
+msgstr "مخزون منخفض"
+
+msgid "Low-stock variants"
+msgstr "أصناف منخفضة المخزون"
+
+msgid "Main"
+msgstr "رئيسية"
+
+msgid "Max $"
+msgstr "الأقصى $"
+
+msgid "Min $"
+msgstr "الأدنى $"
+
+msgid "My Orders"
+msgstr "طلباتي"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Name (AR)"
+msgstr "الاسم (عربي)"
+
+msgid "Name (EN)"
+msgstr "الاسم (إنجليزي)"
+
+msgid "New here?"
+msgstr "جديد هنا؟"
+
+msgid "New product"
+msgstr "منتج جديد"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "No"
+msgstr "لا"
+
+msgid "No categories yet."
+msgstr "لا توجد فئات بعد."
+
+msgid "No orders found."
+msgstr "لا توجد طلبات."
+
+msgid "No orders yet."
+msgstr "لا توجد طلبات بعد."
+
+msgid "No products yet."
+msgstr "لا توجد منتجات بعد."
+
+msgid "No regions yet."
+msgstr "لا توجد مناطق بعد."
+
+msgid "No shoes match your filters."
+msgstr "لا توجد أحذية تطابق عوامل التصفية."
+
+msgid "Not enough stock for %(name)s (only %(n)d left)."
+msgstr "لا يوجد مخزون كافٍ لـ %(name)s (المتبقّي %(n)d فقط)."
+
+msgid "Not found."
+msgstr "غير موجود."
+
+msgid "Online Payment"
+msgstr "الدفع الإلكتروني"
+
+msgid "Online payment is coming soon."
+msgstr "الدفع الإلكتروني قريباً."
+
+msgid "Online payment is not available yet. Please choose Cash on Delivery."
+msgstr "الدفع الإلكتروني غير متاح بعد. الرجاء اختيار الدفع عند الاستلام."
+
+msgid "Only %(n)d left in stock."
+msgstr "المتبقّي في المخزون %(n)d فقط."
+
+msgid "Order"
+msgstr "الطلب"
+
+msgid "Order #%(num)s placed!"
+msgstr "تم تقديم الطلب رقم %(num)s!"
+
+msgid "Order #, name, or phone"
+msgstr "رقم الطلب أو الاسم أو الهاتف"
+
+msgid "Order placed"
+msgstr "تم تقديم الطلب"
+
+msgid "Order summary"
+msgstr "ملخص الطلب"
+
+msgid "Orders"
+msgstr "الطلبات"
+
+msgid "Orders today"
+msgstr "طلبات اليوم"
+
+msgid "Out for delivery"
+msgstr "خارج للتوصيل"
+
+msgid "Out of stock"
+msgstr "غير متوفر"
+
+msgid "Overview"
+msgstr "نظرة عامة"
+
+msgid "Page not found"
+msgstr "الصفحة غير موجودة"
+
+msgid "Pagination"
+msgstr "ترقيم الصفحات"
+
+msgid "Password changed"
+msgstr "تم تغيير كلمة المرور"
+
+msgid "Pay in cash when your order arrives."
+msgstr "ادفع نقداً عند وصول طلبك."
+
+msgid "Pay now (disabled)"
+msgstr "ادفع الآن (معطّل)"
+
+msgid "Payment"
+msgstr "الدفع"
+
+msgid "Payment method"
+msgstr "طريقة الدفع"
+
+msgid "Pending"
+msgstr "قيد الانتظار"
+
+msgid "Pending orders"
+msgstr "الطلبات المعلّقة"
+
+msgid "Permissions"
+msgstr "الصلاحيات"
+
+msgid "Personal info"
+msgstr "المعلومات الشخصية"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Place order"
+msgstr "تأكيد الطلب"
+
+msgid "Please complete the human verification."
+msgstr "الرجاء إكمال التحقق البشري."
+
+msgid "Please enter a correct email and password."
+msgstr "الرجاء إدخال بريد إلكتروني وكلمة مرور صحيحين."
+
+msgid "Please select a color and size."
+msgstr "الرجاء اختيار اللون والمقاس."
+
+msgid "Please try again in a moment."
+msgstr "الرجاء المحاولة بعد لحظات."
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Price"
+msgstr "السعر"
+
+msgid "Proceed to checkout"
+msgstr "المتابعة إلى الدفع"
+
+msgid "Product"
+msgstr "المنتج"
+
+msgid "Product deleted."
+msgstr "تم حذف المنتج."
+
+msgid "Product saved."
+msgstr "تم حفظ المنتج."
+
+msgid "Products"
+msgstr "المنتجات"
+
+msgid "Qty"
+msgstr "الكمية"
+
+msgid "Quality shoes with cash on delivery."
+msgstr "أحذية عالية الجودة مع الدفع عند الاستلام."
+
+msgid "Quality shoes, cash on delivery"
+msgstr "أحذية عالية الجودة، الدفع عند الاستلام"
+
+msgid "Quantity"
+msgstr "الكمية"
+
+msgid "Quantity must be at least 1."
+msgstr "يجب أن تكون الكمية 1 على الأقل."
+
+msgid "Receiver"
+msgstr "المستلم"
+
+msgid "Receiver name"
+msgstr "اسم المستلم"
+
+msgid "Receiver phone"
+msgstr "هاتف المستلم"
+
+msgid "Recent orders"
+msgstr "الطلبات الأخيرة"
+
+msgid "Region"
+msgstr "المنطقة"
+
+msgid "Region deleted."
+msgstr "تم حذف المنطقة."
+
+msgid "Region saved."
+msgstr "تم حفظ المنطقة."
+
+msgid "Regions"
+msgstr "المناطق"
+
+msgid "Remove"
+msgstr "إزالة"
+
+msgid "Request a new link"
+msgstr "طلب رابط جديد"
+
+msgid "Reset"
+msgstr "إعادة تعيين"
+
+msgid "Reset password"
+msgstr "إعادة تعيين كلمة المرور"
+
+msgid "Reset your password"
+msgstr "أعد تعيين كلمة المرور"
+
+msgid "Returned"
+msgstr "مُرتجع"
+
+msgid "Revenue (delivered)"
+msgstr "الإيرادات (المسلّمة)"
+
+msgid "SKU"
+msgstr "رمز المنتج"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Save product"
+msgstr "حفظ المنتج"
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Select a region"
+msgstr "اختر منطقة"
+
+msgid "Select color and size"
+msgstr "اختر اللون والمقاس"
+
+msgid "Send reset link"
+msgstr "إرسال رابط إعادة التعيين"
+
+msgid "Server error"
+msgstr "خطأ في الخادم"
+
+msgid "Set a new password"
+msgstr "تعيين كلمة مرور جديدة"
+
+msgid "Set new password"
+msgstr "تعيين كلمة مرور جديدة"
+
+msgid "ShoeStore"
+msgstr "متجر الأحذية"
+
+msgid "Shop now"
+msgstr "تسوّق الآن"
+
+msgid "Sign up"
+msgstr "إنشاء حساب"
+
+msgid "Signed in successfully."
+msgstr "تم تسجيل الدخول بنجاح."
+
+msgid "Size"
+msgstr "المقاس"
+
+msgid "Slug"
+msgstr "المعرّف"
+
+msgid "Something went wrong on our end."
+msgstr "حدث خطأ ما لدينا."
+
+msgid "Start shopping"
+msgstr "ابدأ التسوق"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Status updated."
+msgstr "تم تحديث الحالة."
+
+msgid "Step into quality"
+msgstr "اخطُ نحو الجودة"
+
+msgid "Stock"
+msgstr "المخزون"
+
+msgid "Subtotal"
+msgstr "المجموع الفرعي"
+
+msgid "Superuser must have is_staff=True."
+msgstr "يجب أن يكون المستخدم المميّز is_staff=True."
+
+msgid "Superuser must have is_superuser=True."
+msgstr "يجب أن يكون المستخدم المميّز is_superuser=True."
+
+msgid "Thank you! We will contact you on WhatsApp to confirm your order."
+msgstr "شكراً لك! سنتواصل معك عبر واتساب لتأكيد طلبك."
+
+msgid "The page you are looking for may have been moved or removed."
+msgstr "قد تكون الصفحة التي تبحث عنها نُقلت أو حُذفت."
+
+msgid "This account is inactive."
+msgstr "هذا الحساب غير مفعّل."
+
+msgid "This item is out of stock."
+msgstr "هذا العنصر غير متوفر."
+
+msgid ""
+"This password reset link is invalid or has expired. Please request a new "
+"one."
+msgstr "رابط إعادة التعيين غير صالح أو منتهي الصلاحية. الرجاء طلب رابط جديد."
+
+msgid "Toggle menu"
+msgstr "تبديل القائمة"
+
+msgid "Too many attempts. Please wait a minute and try again."
+msgstr "محاولات كثيرة جداً. الرجاء الانتظار دقيقة والمحاولة مجدداً."
+
+msgid "Too many orders. Please try again later."
+msgstr "طلبات كثيرة جداً. الرجاء المحاولة لاحقاً."
+
+msgid "Total"
+msgstr "الإجمالي"
+
+msgid "Unit"
+msgstr "سعر الوحدة"
+
+msgid "Variant"
+msgstr "الصنف"
+
+msgid "Variants & stock"
+msgstr "الأصناف والمخزون"
+
+msgid "View"
+msgstr "عرض"
+
+msgid "View store"
+msgstr "عرض المتجر"
+
+msgid "We couldn't find that page."
+msgstr "لم نتمكن من العثور على هذه الصفحة."
+
+msgid "We will contact you on WhatsApp to confirm."
+msgstr "سنتواصل معك عبر واتساب للتأكيد."
+
+msgid "Welcome to ShoeStore! Your account is ready."
+msgstr "مرحباً بك في متجر الأحذية! حسابك جاهز."
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "You have been signed out."
+msgstr "تم تسجيل خروجك."
+
+msgid "You have no orders yet."
+msgstr "ليس لديك طلبات بعد."
+
+msgid "You requested a password reset for your ShoeStore account."
+msgstr "لقد طلبت إعادة تعيين كلمة المرور لحسابك في متجر الأحذية."
+
+msgid "Your cart"
+msgstr "سلتك"
+
+msgid "Your cart is empty."
+msgstr "سلتك فارغة."
+
+msgid "Your password has been updated. You can now log in."
+msgstr "تم تحديث كلمة المرور. يمكنك الآن تسجيل الدخول."
+
+msgid "active"
+msgstr "مفعّل"
+
+msgid "address"
+msgstr "العنوان"
+
+msgid "base price (USD)"
+msgstr "السعر الأساسي (دولار)"
+
+msgid "cart"
+msgstr "سلة"
+
+msgid "cart item"
+msgstr "عنصر السلة"
+
+msgid "cart items"
+msgstr "عناصر السلة"
+
+msgid "carts"
+msgstr "السلال"
+
+msgid "categories"
+msgstr "الفئات"
+
+msgid "category"
+msgstr "فئة"
+
+msgid "color"
+msgstr "لون"
+
+msgid "colors"
+msgstr "الألوان"
+
+msgid "created at"
+msgstr "أُنشئ في"
+
+msgid "delivery fee"
+msgstr "رسوم التوصيل"
+
+msgid "delivery fee (USD)"
+msgstr "رسوم التوصيل (دولار)"
+
+msgid "description (AR)"
+msgstr "الوصف (عربي)"
+
+msgid "description (EN)"
+msgstr "الوصف (إنجليزي)"
+
+msgid "email address"
+msgstr "البريد الإلكتروني"
+
+msgid "fewer than 5 units"
+msgstr "أقل من 5 وحدات"
+
+msgid "hex code"
+msgstr "الرمز اللوني"
+
+msgid "image"
+msgstr "صورة"
+
+msgid "left"
+msgstr "متبقٍ"
+
+msgid "main image"
+msgstr "الصورة الرئيسية"
+
+msgid "name (AR)"
+msgstr "الاسم (عربي)"
+
+msgid "name (EN)"
+msgstr "الاسم (إنجليزي)"
+
+msgid "order"
+msgstr "طلب"
+
+msgid "order item"
+msgstr "عنصر الطلب"
+
+msgid "order items"
+msgstr "عناصر الطلب"
+
+msgid "orders"
+msgstr "الطلبات"
+
+msgid "payment method"
+msgstr "طريقة الدفع"
+
+msgid "product"
+msgstr "منتج"
+
+msgid "product image"
+msgstr "صورة المنتج"
+
+msgid "product images"
+msgstr "صور المنتجات"
+
+msgid "product name"
+msgstr "اسم المنتج"
+
+msgid "products"
+msgstr "المنتجات"
+
+msgid "quantity"
+msgstr "الكمية"
+
+msgid "receiver name"
+msgstr "اسم المستلم"
+
+msgid "receiver phone"
+msgstr "هاتف المستلم"
+
+msgid "region"
+msgstr "منطقة"
+
+msgid "regions"
+msgstr "المناطق"
+
+msgid "session key"
+msgstr "مفتاح الجلسة"
+
+msgid "size"
+msgstr "مقاس"
+
+msgid "sizes"
+msgstr "المقاسات"
+
+msgid "slug"
+msgstr "المعرّف"
+
+msgid "sort order"
+msgstr "ترتيب الفرز"
+
+msgid "status"
+msgstr "الحالة"
+
+msgid "stock"
+msgstr "المخزون"
+
+msgid "subtotal"
+msgstr "المجموع الفرعي"
+
+msgid "total"
+msgstr "الإجمالي"
+
+msgid "unit price"
+msgstr "سعر الوحدة"
+
+msgid "updated at"
+msgstr "حُدّث في"
+
+msgid "user"
+msgstr "مستخدم"
+
+msgid "users"
+msgstr "المستخدمون"
+
+msgid "value"
+msgstr "القيمة"
+
+msgid "variant"
+msgstr "صنف"
+
+msgid "variants"
+msgstr "الأصناف"
+
+msgid "— The ShoeStore team"
+msgstr "— فريق متجر الأحذية"

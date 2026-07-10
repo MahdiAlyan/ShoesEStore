@@ -1,0 +1,47 @@
+{% extends "base_store.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My Orders" %} — {% trans "ShoeStore" %}{% endblock %}
+
+{% block content %}
+<div class="container-xxl py-8">
+    <h1 class="fs-2 fw-bold mb-6">{% trans "My Orders" %}</h1>
+
+    {% if orders %}
+    <div class="card border">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="border-bottom">
+                    <tr class="fw-bold text-muted">
+                        <th class="ps-5">{% trans "Order" %}</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Items" %}</th>
+                        <th>{% trans "Total" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td class="ps-5 fw-bold">#{{ order.pk }}</td>
+                        <td class="text-muted">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                        <td>{{ order.items.all|length }}</td>
+                        <td class="fw-semibold">${{ order.total }}</td>
+                        <td>{% include "orders/_status_badge.html" with order=order %}</td>
+                        <td><a href="{% url 'orders:success' order.pk %}" class="btn btn-sm btn-light-primary">{% trans "View" %}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center text-muted py-20">
+        <i class="ki-duotone ki-handcart fs-4x mb-4"><span class="path1"></span><span class="path2"></span></i>
+        <p class="fs-4">{% trans "You have no orders yet." %}</p>
+        <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">{% trans "Start shopping" %}</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

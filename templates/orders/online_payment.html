@@ -1,0 +1,54 @@
+{% extends "base_store.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Online Payment" %} — {% trans "ShoeStore" %}{% endblock %}
+
+{% comment %}
+  INTENTIONAL: This page is a NON-FUNCTIONAL visual placeholder.
+  - The card inputs below deliberately have NO `name` attributes.
+  - There is NO <form> submission, NO JavaScript, NO network request, and
+    NOTHING is stored. No card data is ever transmitted or persisted anywhere.
+  - Do NOT add name attributes, a submit handler, or any fetch/XHR here.
+{% endcomment %}
+
+{% block content %}
+<div class="container-xxl py-10">
+    <div class="mx-auto" style="max-width:520px">
+        <div class="alert alert-warning d-flex align-items-center">
+            <i class="ki-duotone ki-information fs-2x me-3"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+            <div>
+                <div class="fw-bold">{% trans "Online payment is coming soon." %}</div>
+                <div class="fs-7">الدفع الإلكتروني قريباً. الرجاء اختيار الدفع عند الاستلام.</div>
+            </div>
+        </div>
+
+        <div class="card border">
+            <div class="card-body p-8">
+                <h1 class="fs-3 fw-bold mb-6">{% trans "Card details" %}</h1>
+
+                {# Visual-only inputs: no name attributes, no submission. #}
+                <div class="mb-5">
+                    <label class="form-label fw-semibold">{% trans "Card number" %}</label>
+                    <input type="text" class="form-control" placeholder="4242 4242 4242 4242" autocomplete="off" disabled />
+                </div>
+                <div class="row g-4 mb-5">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">{% trans "Expiry" %}</label>
+                        <input type="text" class="form-control" placeholder="MM / YY" autocomplete="off" disabled />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">{% trans "CVV" %}</label>
+                        <input type="text" class="form-control" placeholder="123" autocomplete="off" disabled />
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary w-100 mb-3" disabled>{% trans "Pay now (disabled)" %}</button>
+
+                <a href="{% url 'orders:checkout' %}" class="btn btn-primary w-100">
+                    {% trans "Back to Cash on Delivery" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

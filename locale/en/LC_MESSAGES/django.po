@@ -1,0 +1,860 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ShoeStore 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Account"
+msgstr ""
+
+msgid "Active"
+msgstr ""
+
+msgid "Add a blank row's fields to create a new variant."
+msgstr ""
+
+msgid "Add category"
+msgstr ""
+
+msgid "Add region"
+msgstr ""
+
+msgid "Add to cart"
+msgstr ""
+
+msgid "Added to cart."
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "All Shoes"
+msgstr ""
+
+msgid "All categories"
+msgstr ""
+
+msgid "All rights reserved."
+msgstr ""
+
+msgid "All statuses"
+msgstr ""
+
+msgid "All variants well stocked."
+msgstr ""
+
+msgid "Already have an account?"
+msgstr ""
+
+msgid "An account with this email already exists."
+msgstr ""
+
+msgid "An email address is required."
+msgstr ""
+
+msgid "Any color"
+msgstr ""
+
+msgid "Any size"
+msgstr ""
+
+msgid "Apply filters"
+msgstr ""
+
+msgid "Back to Cash on Delivery"
+msgstr ""
+
+msgid "Back to cart"
+msgstr ""
+
+msgid "Back to home"
+msgstr ""
+
+msgid "Back to log in"
+msgstr ""
+
+msgid "Browse our collection and pay on delivery."
+msgstr ""
+
+msgid "CVV"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Cancelling an order restocks its items."
+msgstr ""
+
+msgid "Cannot delete a category that still has products."
+msgstr ""
+
+msgid "Cannot delete a region that still has orders."
+msgstr ""
+
+msgid "Card details"
+msgstr ""
+
+msgid "Card number"
+msgstr ""
+
+msgid "Card payment (coming soon)."
+msgstr ""
+
+msgid "Cart"
+msgstr ""
+
+msgid "Cash on Delivery"
+msgstr ""
+
+msgid "Cash on Delivery available."
+msgstr ""
+
+msgid "Categories"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Category deleted."
+msgstr ""
+
+msgid "Category saved."
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
+msgid "Change status"
+msgstr ""
+
+msgid "Check your email"
+msgstr ""
+
+msgid "Checkout"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Clear filters"
+msgstr ""
+
+msgid "Click the link below to choose a new password:"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Color"
+msgstr ""
+
+msgid "Confirm on WhatsApp"
+msgstr ""
+
+msgid "Confirmed"
+msgstr ""
+
+msgid "Continue shopping"
+msgstr ""
+
+msgid "Create an account"
+msgstr ""
+
+msgid "Create your account"
+msgstr ""
+
+msgid "Customer"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Del"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Delete this category?"
+msgstr ""
+
+msgid "Delete this product?"
+msgstr ""
+
+msgid "Delete this region?"
+msgstr ""
+
+msgid "Delivered"
+msgstr ""
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Delivery address"
+msgstr ""
+
+msgid "Delivery details"
+msgstr ""
+
+msgid "Delivery is calculated at checkout."
+msgstr ""
+
+msgid "Delivery region"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Edit product"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Enter a valid phone number (7–15 digits, optional +)."
+msgstr ""
+
+msgid "Enter your email and we'll send a reset link."
+msgstr ""
+
+msgid "Expiry"
+msgstr ""
+
+msgid "Featured products will appear here soon."
+msgstr ""
+
+msgid "Featured shoes"
+msgstr ""
+
+msgid "Fee"
+msgstr ""
+
+msgid "Filters"
+msgstr ""
+
+msgid "First name"
+msgstr ""
+
+msgid "Forgot password?"
+msgstr ""
+
+msgid "Hello,"
+msgstr ""
+
+msgid "Home"
+msgstr ""
+
+msgid ""
+"If an account exists for that email, we've sent password reset instructions."
+" Please check your inbox."
+msgstr ""
+
+msgid "If you did not request this, you can safely ignore this email."
+msgstr ""
+
+msgid "Image is too large (max %(mb)d MB)."
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Important dates"
+msgstr ""
+
+msgid "In stock"
+msgstr ""
+
+msgid "Invalid quantity."
+msgstr ""
+
+msgid "Invalid region."
+msgstr ""
+
+msgid "Invalid status change."
+msgstr ""
+
+msgid "Invalid status."
+msgstr ""
+
+msgid "Items"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Last name"
+msgstr ""
+
+msgid "Log in"
+msgstr ""
+
+msgid "Log out"
+msgstr ""
+
+msgid "Low stock"
+msgstr ""
+
+msgid "Low-stock variants"
+msgstr ""
+
+msgid "Main"
+msgstr ""
+
+msgid "Max $"
+msgstr ""
+
+msgid "Min $"
+msgstr ""
+
+msgid "My Orders"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Name (AR)"
+msgstr ""
+
+msgid "Name (EN)"
+msgstr ""
+
+msgid "New here?"
+msgstr ""
+
+msgid "New product"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "No categories yet."
+msgstr ""
+
+msgid "No orders found."
+msgstr ""
+
+msgid "No orders yet."
+msgstr ""
+
+msgid "No products yet."
+msgstr ""
+
+msgid "No regions yet."
+msgstr ""
+
+msgid "No shoes match your filters."
+msgstr ""
+
+msgid "Not enough stock for %(name)s (only %(n)d left)."
+msgstr ""
+
+msgid "Not found."
+msgstr ""
+
+msgid "Online Payment"
+msgstr ""
+
+msgid "Online payment is coming soon."
+msgstr ""
+
+msgid "Online payment is not available yet. Please choose Cash on Delivery."
+msgstr ""
+
+msgid "Only %(n)d left in stock."
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Order #%(num)s placed!"
+msgstr ""
+
+msgid "Order #, name, or phone"
+msgstr ""
+
+msgid "Order placed"
+msgstr ""
+
+msgid "Order summary"
+msgstr ""
+
+msgid "Orders"
+msgstr ""
+
+msgid "Orders today"
+msgstr ""
+
+msgid "Out for delivery"
+msgstr ""
+
+msgid "Out of stock"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "Page not found"
+msgstr ""
+
+msgid "Pagination"
+msgstr ""
+
+msgid "Password changed"
+msgstr ""
+
+msgid "Pay in cash when your order arrives."
+msgstr ""
+
+msgid "Pay now (disabled)"
+msgstr ""
+
+msgid "Payment"
+msgstr ""
+
+msgid "Payment method"
+msgstr ""
+
+msgid "Pending"
+msgstr ""
+
+msgid "Pending orders"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Personal info"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "Place order"
+msgstr ""
+
+msgid "Please complete the human verification."
+msgstr ""
+
+msgid "Please enter a correct email and password."
+msgstr ""
+
+msgid "Please select a color and size."
+msgstr ""
+
+msgid "Please try again in a moment."
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "Proceed to checkout"
+msgstr ""
+
+msgid "Product"
+msgstr ""
+
+msgid "Product deleted."
+msgstr ""
+
+msgid "Product saved."
+msgstr ""
+
+msgid "Products"
+msgstr ""
+
+msgid "Qty"
+msgstr ""
+
+msgid "Quality shoes with cash on delivery."
+msgstr ""
+
+msgid "Quality shoes, cash on delivery"
+msgstr ""
+
+msgid "Quantity"
+msgstr ""
+
+msgid "Quantity must be at least 1."
+msgstr ""
+
+msgid "Receiver"
+msgstr ""
+
+msgid "Receiver name"
+msgstr ""
+
+msgid "Receiver phone"
+msgstr ""
+
+msgid "Recent orders"
+msgstr ""
+
+msgid "Region"
+msgstr ""
+
+msgid "Region deleted."
+msgstr ""
+
+msgid "Region saved."
+msgstr ""
+
+msgid "Regions"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Request a new link"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Reset password"
+msgstr ""
+
+msgid "Reset your password"
+msgstr ""
+
+msgid "Returned"
+msgstr ""
+
+msgid "Revenue (delivered)"
+msgstr ""
+
+msgid "SKU"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Save product"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Select a region"
+msgstr ""
+
+msgid "Select color and size"
+msgstr ""
+
+msgid "Send reset link"
+msgstr ""
+
+msgid "Server error"
+msgstr ""
+
+msgid "Set a new password"
+msgstr ""
+
+msgid "Set new password"
+msgstr ""
+
+msgid "ShoeStore"
+msgstr ""
+
+msgid "Shop now"
+msgstr ""
+
+msgid "Sign up"
+msgstr ""
+
+msgid "Signed in successfully."
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Slug"
+msgstr ""
+
+msgid "Something went wrong on our end."
+msgstr ""
+
+msgid "Start shopping"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Status updated."
+msgstr ""
+
+msgid "Step into quality"
+msgstr ""
+
+msgid "Stock"
+msgstr ""
+
+msgid "Subtotal"
+msgstr ""
+
+msgid "Superuser must have is_staff=True."
+msgstr ""
+
+msgid "Superuser must have is_superuser=True."
+msgstr ""
+
+msgid "Thank you! We will contact you on WhatsApp to confirm your order."
+msgstr ""
+
+msgid "The page you are looking for may have been moved or removed."
+msgstr ""
+
+msgid "This account is inactive."
+msgstr ""
+
+msgid "This item is out of stock."
+msgstr ""
+
+msgid ""
+"This password reset link is invalid or has expired. Please request a new "
+"one."
+msgstr ""
+
+msgid "Toggle menu"
+msgstr ""
+
+msgid "Too many attempts. Please wait a minute and try again."
+msgstr ""
+
+msgid "Too many orders. Please try again later."
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "Unit"
+msgstr ""
+
+msgid "Variant"
+msgstr ""
+
+msgid "Variants & stock"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "View store"
+msgstr ""
+
+msgid "We couldn't find that page."
+msgstr ""
+
+msgid "We will contact you on WhatsApp to confirm."
+msgstr ""
+
+msgid "Welcome to ShoeStore! Your account is ready."
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "You have been signed out."
+msgstr ""
+
+msgid "You have no orders yet."
+msgstr ""
+
+msgid "You requested a password reset for your ShoeStore account."
+msgstr ""
+
+msgid "Your cart"
+msgstr ""
+
+msgid "Your cart is empty."
+msgstr ""
+
+msgid "Your password has been updated. You can now log in."
+msgstr ""
+
+msgid "active"
+msgstr ""
+
+msgid "address"
+msgstr ""
+
+msgid "base price (USD)"
+msgstr ""
+
+msgid "cart"
+msgstr ""
+
+msgid "cart item"
+msgstr ""
+
+msgid "cart items"
+msgstr ""
+
+msgid "carts"
+msgstr ""
+
+msgid "categories"
+msgstr ""
+
+msgid "category"
+msgstr ""
+
+msgid "color"
+msgstr ""
+
+msgid "colors"
+msgstr ""
+
+msgid "created at"
+msgstr ""
+
+msgid "delivery fee"
+msgstr ""
+
+msgid "delivery fee (USD)"
+msgstr ""
+
+msgid "description (AR)"
+msgstr ""
+
+msgid "description (EN)"
+msgstr ""
+
+msgid "email address"
+msgstr ""
+
+msgid "fewer than 5 units"
+msgstr ""
+
+msgid "hex code"
+msgstr ""
+
+msgid "image"
+msgstr ""
+
+msgid "left"
+msgstr ""
+
+msgid "main image"
+msgstr ""
+
+msgid "name (AR)"
+msgstr ""
+
+msgid "name (EN)"
+msgstr ""
+
+msgid "order"
+msgstr ""
+
+msgid "order item"
+msgstr ""
+
+msgid "order items"
+msgstr ""
+
+msgid "orders"
+msgstr ""
+
+msgid "payment method"
+msgstr ""
+
+msgid "product"
+msgstr ""
+
+msgid "product image"
+msgstr ""
+
+msgid "product images"
+msgstr ""
+
+msgid "product name"
+msgstr ""
+
+msgid "products"
+msgstr ""
+
+msgid "quantity"
+msgstr ""
+
+msgid "receiver name"
+msgstr ""
+
+msgid "receiver phone"
+msgstr ""
+
+msgid "region"
+msgstr ""
+
+msgid "regions"
+msgstr ""
+
+msgid "session key"
+msgstr ""
+
+msgid "size"
+msgstr ""
+
+msgid "sizes"
+msgstr ""
+
+msgid "slug"
+msgstr ""
+
+msgid "sort order"
+msgstr ""
+
+msgid "status"
+msgstr ""
+
+msgid "stock"
+msgstr ""
+
+msgid "subtotal"
+msgstr ""
+
+msgid "total"
+msgstr ""
+
+msgid "unit price"
+msgstr ""
+
+msgid "updated at"
+msgstr ""
+
+msgid "user"
+msgstr ""
+
+msgid "users"
+msgstr ""
+
+msgid "value"
+msgstr ""
+
+msgid "variant"
+msgstr ""
+
+msgid "variants"
+msgstr ""
+
+msgid "— The ShoeStore team"
+msgstr ""

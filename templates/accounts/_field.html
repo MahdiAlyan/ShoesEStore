@@ -1,0 +1,7 @@
+{% load i18n %}
+<div class="mb-5">
+    <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
+    {% for error in field.errors %}<div class="text-danger fs-7 mt-1">{{ error }}</div>{% endfor %}
+</div>

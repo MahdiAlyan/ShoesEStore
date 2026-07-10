@@ -1,0 +1,13 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.git/
+.idea/
+.vscode/
+db.sqlite3
+/media/*
+/staticfiles/
+.env
+metronic_html_v8.2.7_demo2/
+prompt.md
