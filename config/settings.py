@@ -28,7 +28,7 @@ def env_list(key: str, default: str = "") -> list[str]:
 # --- Core -------------------------------------------------------------------
 SECRET_KEY = os.environ.get("SECRET_KEY", "change-me-in-env")
 DEBUG = env_bool("DEBUG", True)
-ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1")
+ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "localhost,127.0.0.1,ShoesEStore.pythonanywhere.com")
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "")
 
 # --- Applications -----------------------------------------------------------
