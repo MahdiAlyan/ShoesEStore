@@ -41,6 +41,14 @@ body {
     display: none !important;
 }
 
+/* Account dropdown (M7): widen past Bootstrap's 10rem default so the
+   signed-in email fits on fewer lines. Cap at the viewport so it never
+   overflows on narrow screens; text-break in the markup handles overflow. */
+.profile-menu {
+    min-width: 15rem;
+    max-width: calc(100vw - 1.5rem);
+}
+
 /* Hero (M4.1): full viewport height minus the sticky navbar, background photo
    with a dark overlay for text contrast. Works in LTR and RTL (centered). */
 :root {
