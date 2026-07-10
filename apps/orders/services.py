@@ -60,6 +60,7 @@ def create_order(*, user, receiver_name, receiver_phone, region, address,
     delivery_fee = region.delivery_fee
     order = Order.objects.create(
         user=user,
+        order_number=Order.next_order_number(),
         receiver_name=receiver_name,
         receiver_phone=receiver_phone,
         region=region,

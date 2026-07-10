@@ -1,4 +1,4 @@
-{% load i18n static %}<!DOCTYPE html>
+{% load i18n static store_extras %}<!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" data-bs-theme="light" data-bs-theme-mode="light">
 <head>
     <title>{% block title %}{% trans "Dashboard" %} · {% trans "ShoeStore" %}{% endblock %}</title>
@@ -19,60 +19,58 @@
 {% url 'dashboard:orders' as dash_orders %}
 {% url 'catalog:home' as store_home %}
 {% url 'accounts:logout' as logout_url %}
-<div class="d-flex flex-row flex-column-fluid" style="min-height:100vh">
+<div class="d-flex flex-row flex-column-fluid" style="min-height:100vh" id="dash_layout">
     {# ===== Sidebar ===== #}
-    <aside class="d-flex flex-column flex-shrink-0 bg-dark text-white p-4" style="width:260px" id="dash_sidebar">
-        <a href="{{ dash_overview|default:'/dashboard/' }}" class="d-flex align-items-center text-white text-decoration-none mb-8">
+    <aside class="dash-sidebar d-flex flex-column flex-shrink-0 bg-dark text-white p-4" style="width:260px" id="dash_sidebar">
+        <a href="{{ dash_overview|default:'/dashboard/' }}" class="dash-brand d-flex align-items-center text-white text-decoration-none mb-8">
             <i class="ki-duotone ki-basket fs-2x text-primary me-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
-            <span class="fs-3 fw-bold">{% trans "ShoeStore" %}</span>
+            <span class="dash-label fs-3 fw-bold">{% trans "ShoeStore" %}</span>
         </a>
         <ul class="nav nav-pills flex-column gap-1 mb-auto">
-            <li class="nav-item"><a href="{{ dash_overview|default:'/dashboard/' }}" class="nav-link text-white {% if active_nav == 'overview' %}active{% endif %}">{% trans "Overview" %}</a></li>
-            <li class="nav-item"><a href="{{ dash_products|default:'/dashboard/products/' }}" class="nav-link text-white {% if active_nav == 'products' %}active{% endif %}">{% trans "Products" %}</a></li>
-            <li class="nav-item"><a href="{{ dash_categories|default:'/dashboard/categories/' }}" class="nav-link text-white {% if active_nav == 'categories' %}active{% endif %}">{% trans "Categories" %}</a></li>
-            <li class="nav-item"><a href="{{ dash_regions|default:'/dashboard/regions/' }}" class="nav-link text-white {% if active_nav == 'regions' %}active{% endif %}">{% trans "Regions" %}</a></li>
-            <li class="nav-item"><a href="{{ dash_orders|default:'/dashboard/orders/' }}" class="nav-link text-white {% if active_nav == 'orders' %}active{% endif %}">{% trans "Orders" %}</a></li>
+            <li class="nav-item"><a href="{{ dash_overview|default:'/dashboard/' }}" class="nav-link dash-nav-link text-white {% if active_nav == 'overview' %}active{% endif %}" data-tip="{% trans 'Overview' %}">
+                <i class="ki-duotone ki-element-11 fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                <span class="dash-label">{% trans "Overview" %}</span></a></li>
+            <li class="nav-item"><a href="{{ dash_products|default:'/dashboard/products/' }}" class="nav-link dash-nav-link text-white {% if active_nav == 'products' %}active{% endif %}" data-tip="{% trans 'Products' %}">
+                <i class="ki-duotone ki-package fs-2"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                <span class="dash-label">{% trans "Products" %}</span></a></li>
+            <li class="nav-item"><a href="{{ dash_categories|default:'/dashboard/categories/' }}" class="nav-link dash-nav-link text-white {% if active_nav == 'categories' %}active{% endif %}" data-tip="{% trans 'Categories' %}">
+                <i class="ki-duotone ki-abstract-26 fs-2"><span class="path1"></span><span class="path2"></span></i>
+                <span class="dash-label">{% trans "Categories" %}</span></a></li>
+            <li class="nav-item"><a href="{{ dash_regions|default:'/dashboard/regions/' }}" class="nav-link dash-nav-link text-white {% if active_nav == 'regions' %}active{% endif %}" data-tip="{% trans 'Regions' %}">
+                <i class="ki-duotone ki-geolocation fs-2"><span class="path1"></span><span class="path2"></span></i>
+                <span class="dash-label">{% trans "Regions" %}</span></a></li>
+            <li class="nav-item"><a href="{{ dash_orders|default:'/dashboard/orders/' }}" class="nav-link dash-nav-link text-white {% if active_nav == 'orders' %}active{% endif %}" data-tip="{% trans 'Orders' %}">
+                <i class="ki-duotone ki-handcart fs-2"><span class="path1"></span><span class="path2"></span></i>
+                <span class="dash-label">{% trans "Orders" %}</span></a></li>
         </ul>
-        <div class="mt-8">
+        <div class="dash-cta mt-8">
             <a href="{{ store_home }}" class="btn btn-sm btn-light-primary w-100 mb-2">{% trans "View store" %}</a>
         </div>
     </aside>
+    <div class="dash-backdrop" id="dash_backdrop"></div>
 
     {# ===== Content ===== #}
     <div class="d-flex flex-column flex-grow-1 bg-light-subtle" style="min-width:0">
         <header class="d-flex align-items-center justify-content-between bg-body border-bottom px-6 py-4">
-            <button class="btn btn-icon btn-light d-lg-none" type="button" onclick="document.getElementById('dash_sidebar').classList.toggle('d-none')" aria-label="{% trans 'Toggle menu' %}">
+            <button class="btn btn-icon btn-light" type="button" id="dash_sidebar_toggle" aria-label="{% trans 'Toggle menu' %}" aria-controls="dash_sidebar" aria-expanded="true">
                 <i class="ki-duotone ki-abstract-14 fs-2"><span class="path1"></span><span class="path2"></span></i>
             </button>
             <h1 class="fs-3 fw-bold m-0">{% block page_title %}{% trans "Dashboard" %}{% endblock %}</h1>
             <div class="d-flex align-items-center gap-2">
                 {% get_current_language as CUR_LANG %}
-                <form action="{% url 'set_language' %}" method="post" class="d-flex">
+                {% get_available_languages as LANGS %}
+                <form action="{% url 'set_language' %}" method="post" class="d-flex lang-switcher-form">
                     {% csrf_token %}
-                    <input name="next" type="hidden" value="{{ request.path }}" />
-                    <select name="language" class="form-select form-select-sm w-auto" onchange="this.form.submit()" aria-label="{% trans 'Language' %}">
-                        {% get_available_languages as LANGS %}
-                        {% for code, name in LANGS %}<option value="{{ code }}" {% if code == CUR_LANG %}selected{% endif %}>{{ name }}</option>{% endfor %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                    <select name="language" class="form-select form-select-sm w-auto lang-switcher" aria-label="{% trans 'Language' %}">
+                        {% for code, name in LANGS %}<option value="{{ code }}" data-next="{% switch_lang_url code %}" {% if code == CUR_LANG %}selected{% endif %}>{{ name }}</option>{% endfor %}
                     </select>
                 </form>
-                <span class="text-muted d-none d-md-inline">{{ user.email }}</span>
-                <form action="{{ logout_url|default:'/accounts/logout/' }}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-light-danger">{% trans "Log out" %}</button>
-                </form>
+                {% include "partials/_profile_menu.html" with on_dashboard=True %}
             </div>
         </header>
 
-        {% if messages %}
-            <div class="px-6 pt-4">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags|default:'primary' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Close' %}"></button>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+        {# Flash messages are rendered via SweetAlert2 (see partials/_js_ui.html, M5). #}
 
         <main class="p-6 flex-grow-1">
             {% block content %}{% endblock %}
@@ -82,6 +80,7 @@
 <script>window.CSRF_TOKEN = "{{ csrf_token }}";</script>
 <script src="{% static 'metronic/plugins/global/plugins.bundle.js' %}"></script>
 <script src="{% static 'metronic/js/scripts.bundle.js' %}"></script>
+{% include "partials/_js_ui.html" %}
 {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -1,5 +1,7 @@
 from urllib.parse import quote
 
+from apps.catalog.money import format_money
+
 from .phone import wa_digits
 
 
@@ -7,18 +9,19 @@ def build_whatsapp_message(order):
     """Build the exact bilingual confirmation message (spec §8).
 
     Item/region snapshots are taken from the order so the text is stable.
+    Money is rendered via the canonical ``format_money`` helper (M1.3).
     """
     lines = [
         f"Hello {order.receiver_name}! \U0001F44B",
-        f"Order #{order.pk} — ShoeStore",
+        f"Order #{order.order_number} — ShoeStore",
     ]
     for item in order.items.all():
         lines.append(
             f"- {item.product_name} | {item.color_name} | Size {item.size_value} "
-            f"x{item.quantity} — ${item.line_total:.2f}"
+            f"x{item.quantity} — {format_money(item.line_total)}"
         )
-    lines.append(f"Delivery ({order.region.name}): ${order.delivery_fee:.2f}")
-    lines.append(f"Total: ${order.total:.2f}")
+    lines.append(f"Delivery ({order.region.name}): {format_money(order.delivery_fee)}")
+    lines.append(f"Total: {format_money(order.total)}")
     lines.append("Please reply to CONFIRM your order.")
     lines.append("الرجاء الرد لتأكيد الطلب.")
     return "\n".join(lines)

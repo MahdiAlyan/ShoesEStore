@@ -30,7 +30,7 @@
                     <tr>
                         <td class="ps-5 fw-semibold">{{ c.name_en }}</td><td>{{ c.name_ar }}</td><td class="text-muted">{{ c.slug }}</td><td>{{ c.n }}</td>
                         <td class="text-end pe-5">
-                            <form method="post" action="{% url 'dashboard:category_delete' c.pk %}" class="d-inline" onsubmit="return confirm('{% trans "Delete this category?" %}')">
+                            <form method="post" action="{% url 'dashboard:category_delete' c.pk %}" class="d-inline" data-confirm="{% trans 'Delete this category?' %}" data-confirm-text="{% trans 'Delete' %}">
                                 {% csrf_token %}<button class="btn btn-sm btn-light-danger">{% trans "Delete" %}</button>
                             </form>
                         </td>

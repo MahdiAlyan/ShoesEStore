@@ -1,14 +1,14 @@
 {% extends "base_store.html" %}
-{% load i18n %}
+{% load i18n store_extras %}
 
-{% block title %}{% trans "Order placed" %} #{{ order.pk }} — {% trans "ShoeStore" %}{% endblock %}
+{% block title %}{% trans "Order placed" %} #{{ order.order_number }} — {% trans "ShoeStore" %}{% endblock %}
 
 {% block content %}
 <div class="container-xxl py-10">
     <div class="mx-auto" style="max-width:640px">
         <div class="text-center mb-8">
             <i class="ki-duotone ki-check-circle fs-5x text-success mb-3"><span class="path1"></span><span class="path2"></span></i>
-            <h1 class="fs-1 fw-bold">{% blocktrans with num=order.pk %}Order #{{ num }} placed!{% endblocktrans %}</h1>
+            <h1 class="fs-1 fw-bold">{% blocktrans with num=order.order_number %}Order #{{ num }} placed!{% endblocktrans %}</h1>
             <p class="fs-5 text-gray-700">{% trans "Thank you! We will contact you on WhatsApp to confirm your order." %}</p>
             <p class="fs-5 text-gray-700" dir="rtl">سنتواصل معك عبر واتساب لتأكيد طلبك.</p>
         </div>
@@ -28,13 +28,13 @@
                 {% for item in order.items.all %}
                     <div class="d-flex justify-content-between mb-2">
                         <span>{{ item.product_name }} <span class="text-muted fs-8">{{ item.color_name }} · {{ item.size_value }} × {{ item.quantity }}</span></span>
-                        <span class="fw-semibold">${{ item.line_total }}</span>
+                        <span class="fw-semibold">{{ item.line_total|money }}</span>
                     </div>
                 {% endfor %}
                 <div class="separator my-3"></div>
-                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Subtotal" %}</span><span>${{ order.subtotal }}</span></div>
-                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Delivery" %} ({{ order.region.name }})</span><span>${{ order.delivery_fee }}</span></div>
-                <div class="d-flex justify-content-between fs-4 fw-bold mt-2"><span>{% trans "Total" %}</span><span>${{ order.total }}</span></div>
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Subtotal" %}</span><span>{{ order.subtotal|money }}</span></div>
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Delivery" %} ({{ order.region.name }})</span><span>{{ order.delivery_fee|money }}</span></div>
+                <div class="d-flex justify-content-between fs-4 fw-bold mt-2"><span>{% trans "Total" %}</span><span>{{ order.total|money }}</span></div>
 
                 <div class="d-flex gap-3 mt-6">
                     <a href="{% url 'orders:my_orders' %}" class="btn btn-light flex-grow-1">{% trans "My Orders" %}</a>

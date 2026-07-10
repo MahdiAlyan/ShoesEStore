@@ -860,3 +860,90 @@ msgstr "الأصناف"
 
 msgid "— The ShoeStore team"
 msgstr "— فريق متجر الأحذية"
+
+msgid "Select a size"
+msgstr "اختر المقاس"
+
+msgid "Continue with Cash on Delivery"
+msgstr "المتابعة بالدفع عند الاستلام"
+
+msgid "Online payment is coming soon. Please choose Cash on Delivery."
+msgstr "الدفع الإلكتروني قريباً. الرجاء اختيار الدفع عند الاستلام."
+
+msgid "Success"
+msgstr "تم بنجاح"
+
+msgid "Error"
+msgstr "خطأ"
+
+msgid "Are you sure?"
+msgstr "هل أنت متأكد؟"
+
+msgid "Remove this item?"
+msgstr "إزالة هذا العنصر؟"
+
+msgid "This item will be removed from your cart."
+msgstr "ستتم إزالة هذا العنصر من سلتك."
+
+msgid "Yes, remove"
+msgstr "نعم، احذف"
+
+msgid "Change order status?"
+msgstr "تغيير حالة الطلب؟"
+
+msgid "Yes, change it"
+msgstr "نعم، غيّرها"
+
+msgid "Order #%(num)s placed! We will confirm on WhatsApp."
+msgstr "تم تنفيذ الطلب رقم %(num)s! سنؤكد عبر واتساب."
+
+msgid "Decrease quantity"
+msgstr "إنقاص الكمية"
+
+msgid "Increase quantity"
+msgstr "زيادة الكمية"
+
+msgid "Add variants"
+msgstr "إضافة تنويعات"
+
+msgid "Save the product to bulk-add variants."
+msgstr "احفظ المنتج لإضافة التنويعات دفعة واحدة."
+
+msgid "Generates every color × size combination that doesn't already exist."
+msgstr "يُنشئ كل تركيبة لون × مقاس غير موجودة مسبقاً."
+
+msgid "Colors"
+msgstr "الألوان"
+
+msgid "Sizes"
+msgstr "المقاسات"
+
+msgid "Select colors"
+msgstr "اختر الألوان"
+
+msgid "Select sizes"
+msgstr "اختر المقاسات"
+
+msgid "Default stock"
+msgstr "المخزون الافتراضي"
+
+msgid "SKU prefix (optional)"
+msgstr "بادئة SKU (اختياري)"
+
+msgid "Create variants"
+msgstr "إنشاء التنويعات"
+
+msgid "{created} variants created, {skipped} skipped."
+msgstr "تم إنشاء {created} تنويعة، وتم تخطي {skipped}."
+
+msgid "Select at least one color and one size."
+msgstr "اختر لوناً واحداً ومقاساً واحداً على الأقل."
+
+msgid "Stock must be a non-negative whole number."
+msgstr "يجب أن يكون المخزون رقماً صحيحاً غير سالب."
+
+msgid "Signed in as"
+msgstr "مسجّل الدخول باسم"
+
+msgid "Storefront"
+msgstr "المتجر"

@@ -1,0 +1,39 @@
+{% load i18n %}
+{% comment %}
+Circular icon-only account dropdown (M7). Pass on_dashboard=True from the
+dashboard header so staff get a "Storefront" link instead of "Dashboard".
+{% endcomment %}
+{% url 'orders:my_orders' as my_orders_url %}
+{% url 'accounts:logout' as logout_url %}
+{% url 'dashboard:overview' as dashboard_url %}
+{% url 'catalog:home' as store_home_url %}
+<div class="dropdown">
+    <button class="btn btn-icon btn-light rounded-circle" type="button" data-bs-toggle="dropdown"
+            data-bs-display="static" aria-expanded="false" aria-label="{% trans 'Account' %}">
+        <i class="ki-duotone ki-profile-circle fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow profile-menu">
+        <li>
+            <span class="dropdown-item-text">
+                <span class="d-block fs-8 text-muted">{% trans "Signed in as" %}</span>
+                <span class="d-block fw-semibold text-gray-900 text-break">{{ user.email }}</span>
+            </span>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ my_orders_url|default:'/orders/mine/' }}">{% trans "My Orders" %}</a></li>
+        {% if user.is_staff %}
+            {% if on_dashboard %}
+                <li><a class="dropdown-item" href="{{ store_home_url|default:'/' }}">{% trans "Storefront" %}</a></li>
+            {% else %}
+                <li><a class="dropdown-item" href="{{ dashboard_url|default:'/dashboard/' }}">{% trans "Dashboard" %}</a></li>
+            {% endif %}
+        {% endif %}
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <form action="{{ logout_url|default:'/accounts/logout/' }}" method="post" class="px-3 py-1">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-light-danger w-100">{% trans "Log out" %}</button>
+            </form>
+        </li>
+    </ul>
+</div>

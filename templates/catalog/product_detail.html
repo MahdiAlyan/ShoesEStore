@@ -1,5 +1,5 @@
 {% extends "base_store.html" %}
-{% load i18n %}
+{% load i18n store_extras %}
 
 {% block title %}{{ product.name }} — {% trans "ShoeStore" %}{% endblock %}
 {% block meta_description %}{{ product.description|striptags|truncatewords:25 }}{% endblock %}
@@ -43,7 +43,7 @@
         <div class="col-lg-6">
             <div class="text-muted text-uppercase fs-8">{{ product.category.name }}</div>
             <h1 class="fs-1 fw-bold text-gray-900">{{ product.name }}</h1>
-            <div class="fs-2 fw-bold text-primary mb-4">${{ product.base_price }}</div>
+            <div class="fs-2 fw-bold text-primary mb-4">{{ product.base_price|money }}</div>
             {% if product.description %}<p class="text-gray-700 mb-6">{{ product.description|linebreaksbr }}</p>{% endif %}
 
             {{ availability|json_script:"variant-availability" }}
@@ -114,12 +114,16 @@
         outOfStock: "{% trans 'Out of stock' %}",
         left: "{% trans 'left' %}",
         select: "{% trans 'Select color and size' %}",
+        selectSize: "{% trans 'Select a size' %}",
     };
     let selColor = null, selSize = null;
 
     function stockFor(c, s) {
         const v = availability[c + "_" + s];
         return typeof v === "number" ? v : 0;
+    }
+    function colorHasStock(c) {
+        return sizeButtons.some(function (btn) { return stockFor(c, btn.dataset.size) > 0; });
     }
     function refreshSizes() {
         sizeButtons.forEach(btn => {
@@ -146,7 +150,9 @@
             }
             stockStatus.innerHTML = '<span class="badge badge-light-danger">' + I18N.outOfStock + '</span>';
         } else {
-            stockStatus.innerHTML = '<span class="badge badge-light">' + I18N.select + '</span>';
+            // A color is auto-selected on load, so guide the user to pick a size.
+            var msg = selColor ? I18N.selectSize : I18N.select;
+            stockStatus.innerHTML = '<span class="badge badge-light">' + msg + '</span>';
         }
     }
     function selectedVariantId() {
@@ -172,8 +178,15 @@
         refreshStatus();
     }));
 
-    // Sizes start disabled until a color is chosen.
-    refreshSizes();
+    // Auto-select the first color that has any stock (M4.4); sizes then reflect
+    // that color's availability. Falls back to the neutral prompt if none.
+    var firstInStock = colorButtons.find(function (btn) { return colorHasStock(btn.dataset.color); });
+    if (firstInStock) {
+        firstInStock.click();
+    } else {
+        refreshSizes();
+        refreshStatus();
+    }
 
     // Add-to-cart is wired by cart.js (M4). Expose the current selection to it.
     picker.getSelection = function () {

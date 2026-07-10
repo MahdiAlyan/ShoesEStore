@@ -106,6 +106,63 @@ class AdminOrderApiTests(TestCase):
         self.assertEqual(len(self.client.get(f"/api/admin/orders/?q={self.order.pk}").json()), 1)
 
 
+class BulkVariantApiTests(TestCase):
+    """M6.3 — POST /api/admin/products/{id}/variants/bulk/."""
+
+    def setUp(self):
+        self.d = DashboardData.build()
+        self.product = self.d["p"]  # has R-RED-40, R-RED-41, R-BLU-40 (blue×41 missing)
+        self.url = f"/api/admin/products/{self.product.pk}/variants/bulk/"
+
+    def _payload(self, **over):
+        base = {
+            "color_ids": [self.d["red"].id, self.d["blue"].id],
+            "size_ids": [self.d["s40"].id, self.d["s41"].id],
+            "stock": 7,
+            "sku_prefix": "",
+        }
+        base.update(over)
+        return base
+
+    def test_creates_only_missing_combinations(self):
+        self.client.force_login(self.d["admin"])
+        before = self.product.variants.count()
+        resp = self.client.post(self.url, self._payload(), content_type="application/json")
+        self.assertEqual(resp.status_code, 201)
+        self.assertEqual(resp.json(), {"created": 1, "skipped": 3})
+        self.assertEqual(self.product.variants.count(), before + 1)
+        # the new variant is blue × 41 with the requested stock
+        v = self.product.variants.get(color=self.d["blue"], size=self.d["s41"])
+        self.assertEqual(v.stock, 7)
+
+    def test_second_run_skips_all(self):
+        self.client.force_login(self.d["admin"])
+        self.client.post(self.url, self._payload(), content_type="application/json")
+        resp = self.client.post(self.url, self._payload(), content_type="application/json")
+        self.assertEqual(resp.json(), {"created": 0, "skipped": 4})
+
+    def test_sku_uses_prefix_uppercased(self):
+        self.client.force_login(self.d["admin"])
+        self.client.post(self.url, self._payload(sku_prefix="run x"), content_type="application/json")
+        v = self.product.variants.get(color=self.d["blue"], size=self.d["s41"])
+        self.assertTrue(v.sku.startswith("RUN-X-"))
+        self.assertEqual(v.sku, v.sku.upper())
+
+    def test_requires_color_and_size(self):
+        self.client.force_login(self.d["admin"])
+        resp = self.client.post(self.url, self._payload(size_ids=[]), content_type="application/json")
+        self.assertEqual(resp.status_code, 400)
+
+    def test_non_staff_forbidden(self):
+        self.client.force_login(self.d["customer"])
+        resp = self.client.post(self.url, self._payload(), content_type="application/json")
+        self.assertEqual(resp.status_code, 403)
+
+    def test_anonymous_forbidden(self):
+        resp = self.client.post(self.url, self._payload(), content_type="application/json")
+        self.assertIn(resp.status_code, (401, 403))
+
+
 class ProductCrudTests(TestCase):
     def setUp(self):
         self.d = DashboardData.build()

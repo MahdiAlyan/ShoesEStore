@@ -29,9 +29,12 @@ def checkout(request):
             messages.error(request, _("Please complete the human verification."))
         elif form.is_valid():
             data = form.cleaned_data
-            # Online payment is a non-functional placeholder: never creates an order.
+            # Online payment is a non-functional placeholder handled entirely by the
+            # checkout modal (M3), which reverts the choice to COD before submit.
+            # Server-side guard: never create an ONLINE order — bounce back to checkout.
             if data["payment_method"] == PaymentMethod.ONLINE:
-                return redirect("orders:online_payment")
+                messages.info(request, _("Online payment is coming soon. Please choose Cash on Delivery."))
+                return redirect("orders:checkout")
             # Rate limit only real order creation (shared bucket with the API).
             if is_ratelimited(request, group="order-create", key="user",
                               rate="10/h", method="POST", increment=True):
@@ -53,6 +56,8 @@ def checkout(request):
             except EmptyCart:
                 messages.info(request, _("Your cart is empty."))
                 return redirect("cart:detail")
+            # One-time success toast on the success page (M5, via messages->Swal).
+            messages.success(request, _("Order #%(num)s placed! We will confirm on WhatsApp.") % {"num": order.order_number})
             return redirect("orders:success", pk=order.pk)
 
     context = {
@@ -62,12 +67,6 @@ def checkout(request):
         "regions": regions,
     }
     return render(request, "orders/checkout.html", context)
-
-
-@login_required
-def online_payment(request):
-    """Static, non-functional card page (visual placeholder only)."""
-    return render(request, "orders/online_payment.html")
 
 
 @login_required

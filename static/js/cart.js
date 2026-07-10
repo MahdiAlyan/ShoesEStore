@@ -22,29 +22,21 @@
         });
     }
 
-    function alertArea() {
-        var el = document.getElementById("ss-alerts");
-        if (!el) {
-            el = document.createElement("div");
-            el.id = "ss-alerts";
-            el.style.cssText = "position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:1080;max-width:520px;width:90%";
-            document.body.appendChild(el);
-        }
-        return el;
+    // Feedback goes through SweetAlert2 (ShoeStore, defined in site.js). Errors are
+    // modal, everything else a corner toast. Falls back to a plain alert if absent.
+    function i18n(key, fallback) {
+        return (window.SS && window.SS.i18n && window.SS.i18n[key]) || fallback;
     }
-
     function notify(message, type) {
-        var wrap = document.createElement("div");
-        wrap.className = "alert alert-" + (type || "primary") + " alert-dismissible fade show shadow-sm";
-        wrap.setAttribute("role", "alert");
-        wrap.textContent = message;
-        var btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn-close";
-        btn.setAttribute("data-bs-dismiss", "alert");
-        wrap.appendChild(btn);
-        alertArea().appendChild(wrap);
-        setTimeout(function () { wrap.classList.remove("show"); setTimeout(function () { wrap.remove(); }, 300); }, 4000);
+        var kind = type === "danger" ? "error"
+            : type === "warning" ? "warning"
+            : type === "success" ? "success" : "info";
+        if (window.ShoeStore) {
+            if (kind === "error") { window.ShoeStore.alert("error", i18n("error", "Error"), message); }
+            else { window.ShoeStore.toast(kind, message); }
+        } else {
+            window.alert(message);
+        }
     }
 
     function updateBadge(count) {
@@ -90,27 +82,62 @@
         if (!data.item_count) { window.location.reload(); }
     }
 
+    // ---- Cart page: -/+ quantity steppers (M4.5) ----
+    // Clamp between 1 and available stock, then reuse the change-based PATCH.
+    document.addEventListener("click", function (e) {
+        var stepBtn = e.target.closest && e.target.closest(".qty-step");
+        if (!stepBtn) return;
+        var id = stepBtn.dataset.itemId;
+        var input = document.querySelector('.cart-qty[data-item-id="' + id + '"]');
+        if (!input) return;
+        var step = parseInt(stepBtn.dataset.step, 10) || 0;
+        var max = parseInt(input.getAttribute("max") || "0", 10);
+        var val = (parseInt(input.value || "1", 10) || 1) + step;
+        if (val < 1) val = 1;
+        if (max && val > max) val = max;
+        if (String(val) === input.value) return;
+        input.value = val;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
     document.addEventListener("change", function (e) {
         var input = e.target.closest && e.target.closest(".cart-qty");
         if (!input) return;
         var id = input.dataset.itemId;
         var q = parseInt(input.value || "1", 10);
+        if (q < 1) q = 1;
         api("/api/cart/items/" + id + "/", "PATCH", { quantity: q }).then(function (r) {
             if (r.ok) { refreshCart(r.data); }
             else { notify(r.data.warning || r.data.detail || "Update failed.", "danger"); if (r.data.item_count !== undefined) refreshCart(r.data); }
         });
     });
 
-    document.addEventListener("click", function (e) {
-        var btn = e.target.closest && e.target.closest(".cart-remove");
-        if (!btn) return;
-        var id = btn.dataset.itemId;
+    function doRemove(id) {
         api("/api/cart/items/" + id + "/", "DELETE", null).then(function (r) {
             if (r.ok) {
                 var row = document.querySelector('tr[data-row-id="' + id + '"]');
                 if (row) row.remove();
                 refreshCart(r.data);
+            } else {
+                notify(r.data.detail || i18n("error", "Error"), "danger");
             }
         });
+    }
+
+    document.addEventListener("click", function (e) {
+        var btn = e.target.closest && e.target.closest(".cart-remove");
+        if (!btn) return;
+        var id = btn.dataset.itemId;
+        // Confirm removal via SweetAlert2 (M5).
+        if (window.ShoeStore && window.ShoeStore.confirm) {
+            window.ShoeStore.confirm({
+                title: i18n("removeTitle", "Remove this item?"),
+                text: i18n("removeText", ""),
+                confirmText: i18n("removeConfirm", "Yes, remove"),
+                cancelText: i18n("cancel", "Cancel"),
+            }).then(function (res) { if (res && res.isConfirmed) doRemove(id); });
+        } else {
+            doRemove(id);
+        }
     });
 })();

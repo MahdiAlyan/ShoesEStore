@@ -1,5 +1,5 @@
 {% extends "base_dashboard.html" %}
-{% load i18n %}
+{% load i18n store_extras %}
 
 {% block page_title %}{% trans "Products" %}{% endblock %}
 
@@ -21,12 +21,12 @@
                 <tr>
                     <td class="ps-5 fw-semibold">{{ p.name_en }} <span class="text-muted fs-8">/ {{ p.name_ar }}</span></td>
                     <td>{{ p.category.name }}</td>
-                    <td>${{ p.base_price }}</td>
+                    <td>{{ p.base_price|money }}</td>
                     <td>{{ p.total_stock }}</td>
                     <td>{% if p.is_active %}<span class="badge badge-light-success">{% trans "Yes" %}</span>{% else %}<span class="badge badge-light">{% trans "No" %}</span>{% endif %}</td>
                     <td class="text-end pe-5">
                         <a href="{% url 'dashboard:product_edit' p.pk %}" class="btn btn-sm btn-light-primary">{% trans "Edit" %}</a>
-                        <form method="post" action="{% url 'dashboard:product_delete' p.pk %}" class="d-inline" onsubmit="return confirm('{% trans "Delete this product?" %}')">
+                        <form method="post" action="{% url 'dashboard:product_delete' p.pk %}" class="d-inline" data-confirm="{% trans 'Delete this product?' %}" data-confirm-text="{% trans 'Delete' %}">
                             {% csrf_token %}<button class="btn btn-sm btn-light-danger">{% trans "Delete" %}</button>
                         </form>
                     </td>

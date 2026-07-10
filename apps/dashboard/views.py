@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from apps.catalog.models import Category, Product, ProductVariant
+from apps.catalog.models import Category, Color, Product, ProductVariant, Size
 from apps.orders.models import Order, OrderStatus, Region
 
 from .decorators import staff_required
@@ -67,6 +67,9 @@ def product_form(request, pk=None):
     return render(request, "dashboard/product_form.html", {
         "active_nav": "products", "form": form, "variants": variants,
         "images": images, "product": product,
+        # For the bulk "Add variants" modal (M6.3).
+        "all_colors": Color.objects.all(),
+        "all_sizes": Size.objects.all(),
     })
 
 
@@ -149,7 +152,7 @@ def orders(request):
     if q:
         flt = Q(receiver_name__icontains=q) | Q(receiver_phone__icontains=q)
         if q.isdigit():
-            flt |= Q(pk=int(q))
+            flt |= Q(order_number=int(q))
         qs = qs.filter(flt)
 
     from django.core.paginator import Paginator

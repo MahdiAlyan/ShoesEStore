@@ -1,0 +1,24 @@
+{% load i18n static %}
+{# Site-wide UI layer config (M5): SweetAlert2 + select2. Injected in both bases. #}
+<script>
+window.SS = {
+    rtl: {% if LANGUAGE_BIDI %}true{% else %}false{% endif %},
+    i18n: {
+        success: "{% trans 'Success' %}",
+        error: "{% trans 'Error' %}",
+        confirm: "{% trans 'Are you sure?' %}",
+        yes: "{% trans 'Yes' %}",
+        cancel: "{% trans 'Cancel' %}",
+        removeTitle: "{% trans 'Remove this item?' %}",
+        removeText: "{% trans 'This item will be removed from your cart.' %}",
+        removeConfirm: "{% trans 'Yes, remove' %}",
+        statusChangeTitle: "{% trans 'Change order status?' %}",
+        statusChangeConfirm: "{% trans 'Yes, change it' %}"
+    },
+    messages: [
+        {% for m in messages %}{ level: "{{ m.level_tag|escapejs }}", text: "{{ m|escapejs }}" }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ]
+};
+</script>
+<script src="{% static 'js/site.js' %}"></script>

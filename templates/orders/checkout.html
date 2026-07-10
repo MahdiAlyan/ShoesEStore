@@ -1,5 +1,5 @@
 {% extends "base_store.html" %}
-{% load i18n %}
+{% load i18n store_extras %}
 
 {% block title %}{% trans "Checkout" %} — {% trans "ShoeStore" %}{% endblock %}
 
@@ -35,7 +35,7 @@
                                 {% for r in regions %}
                                     <option value="{{ r.id }}" data-fee="{{ r.delivery_fee }}"
                                         {% if form.region.value|stringformat:'s' == r.id|stringformat:'s' %}selected{% endif %}>
-                                        {{ r.name }} — ${{ r.delivery_fee }}
+                                        {{ r.name }} — {{ r.delivery_fee|money }}
                                     </option>
                                 {% endfor %}
                             </select>
@@ -53,14 +53,14 @@
                     <div class="card-body">
                         <h2 class="fs-4 fw-bold mb-5">{% trans "Payment method" %}</h2>
                         <label class="d-flex align-items-center gap-3 border rounded p-4 mb-3 cursor-pointer">
-                            <input type="radio" name="payment_method" value="COD" class="form-check-input m-0" checked />
+                            <input type="radio" name="payment_method" id="pm-cod" value="COD" class="form-check-input m-0" checked />
                             <span>
                                 <span class="fw-bold d-block">{% trans "Cash on Delivery" %}</span>
                                 <span class="text-muted fs-7">{% trans "Pay in cash when your order arrives." %}</span>
                             </span>
                         </label>
                         <label class="d-flex align-items-center gap-3 border rounded p-4 cursor-pointer">
-                            <input type="radio" name="payment_method" value="ONLINE" class="form-check-input m-0" />
+                            <input type="radio" name="payment_method" id="pm-online" value="ONLINE" class="form-check-input m-0" />
                             <span>
                                 <span class="fw-bold d-block">{% trans "Online Payment" %}</span>
                                 <span class="text-muted fs-7">{% trans "Card payment (coming soon)." %}</span>
@@ -82,14 +82,14 @@
                                     <span class="text-gray-700">{{ item.variant.product.name }}
                                         <span class="text-muted fs-8">{{ item.variant.color.name }} · {{ item.variant.size.value }} × {{ item.quantity }}</span>
                                     </span>
-                                    <span class="fw-semibold">${{ item.line_total }}</span>
+                                    <span class="fw-semibold">{{ item.line_total|money }}</span>
                                 </div>
                             {% endfor %}
                         </div>
                         <div class="separator my-3"></div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">{% trans "Subtotal" %}</span>
-                            <span class="fw-semibold">${{ cart.subtotal }}</span>
+                            <span class="fw-semibold">{{ cart.subtotal|money }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">{% trans "Delivery" %}</span>
@@ -97,7 +97,7 @@
                         </div>
                         <div class="d-flex justify-content-between fs-4 fw-bold mt-3">
                             <span>{% trans "Total" %}</span>
-                            <span id="summary-total">${{ cart.subtotal }}</span>
+                            <span id="summary-total">{{ cart.subtotal|money }}</span>
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg w-100 mt-5">{% trans "Place order" %}</button>
                         <a href="{% url 'cart:detail' %}" class="btn btn-light w-100 mt-2">{% trans "Back to cart" %}</a>
@@ -107,11 +107,85 @@
         </div>
     </form>
 </div>
+
+{# ===== Online-payment modal (M3): visual-only, no order is ever placed online ===== #}
+{% comment %}
+  INTENTIONAL: The card inputs in this modal are a NON-FUNCTIONAL visual placeholder.
+  - They deliberately have NO `name` attributes.
+  - There is NO form submission, NO network request, and NOTHING is stored.
+    No card data is ever transmitted or persisted anywhere.
+  - Do NOT add name attributes, a submit handler, or any fetch/XHR here.
+{% endcomment %}
+<div class="modal fade" id="online-payment-modal" tabindex="-1" aria-hidden="true" aria-labelledby="online-payment-title">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4 fw-bold" id="online-payment-title">{% trans "Card details" %}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning d-flex align-items-center">
+                    <i class="ki-duotone ki-information fs-2x me-3"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                    <div>
+                        <div class="fw-bold">{% trans "Online payment is coming soon." %}</div>
+                        <div class="fs-7" dir="rtl">الدفع الإلكتروني قريباً. الرجاء اختيار الدفع عند الاستلام.</div>
+                    </div>
+                </div>
+
+                {# Visual-only inputs: no name attributes, no submission. #}
+                <div class="mb-5">
+                    <label class="form-label fw-semibold">{% trans "Card number" %}</label>
+                    <input type="text" class="form-control" placeholder="4242 4242 4242 4242" autocomplete="off" disabled />
+                </div>
+                <div class="row g-4 mb-2">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">{% trans "Expiry" %}</label>
+                        <input type="text" class="form-control" placeholder="MM / YY" autocomplete="off" disabled />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">{% trans "CVV" %}</label>
+                        <input type="text" class="form-control" placeholder="123" autocomplete="off" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary w-100" id="continue-cod">
+                    {% trans "Continue with Cash on Delivery" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 (function () {
+    // ----- Online-payment modal (M3): keeps checkout COD-only -----
+    var codRadio = document.getElementById("pm-cod");
+    var onlineRadio = document.getElementById("pm-online");
+    var modalEl = document.getElementById("online-payment-modal");
+    if (onlineRadio && modalEl && window.bootstrap) {
+        var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        var selectCod = function () { if (codRadio) codRadio.checked = true; };
+        // Selecting "Online Payment" opens the modal.
+        onlineRadio.addEventListener("change", function () {
+            if (onlineRadio.checked) modal.show();
+        });
+        // "Continue with Cash on Delivery" reverts to COD and closes.
+        var contBtn = document.getElementById("continue-cod");
+        if (contBtn) contBtn.addEventListener("click", function () { selectCod(); modal.hide(); });
+        // Dismissing the modal any other way also reverts to COD (never leave ONLINE selected).
+        modalEl.addEventListener("hidden.bs.modal", function () {
+            if (onlineRadio.checked) selectCod();
+        });
+        // Defensive: if ONLINE is somehow still selected at submit, open the modal instead.
+        var form = onlineRadio.closest("form");
+        if (form) form.addEventListener("submit", function (e) {
+            if (onlineRadio.checked) { e.preventDefault(); modal.show(); }
+        });
+    }
+
     var subtotal = parseFloat("{{ cart.subtotal|stringformat:'f' }}") || 0;
     var region = document.getElementById("id_region");
     var deliveryEl = document.getElementById("summary-delivery");
@@ -124,7 +198,12 @@
         deliveryEl.textContent = fmt(fee);
         totalEl.textContent = fmt(subtotal + fee);
     }
-    if (region) { region.addEventListener("change", update); update(); }
+    if (region) {
+        // Bind via jQuery so select2's change event updates the delivery fee.
+        if (window.jQuery) { window.jQuery(region).on("change", update); }
+        else { region.addEventListener("change", update); }
+        update();
+    }
 })();
 </script>
 {% endblock %}

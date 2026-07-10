@@ -44,6 +44,63 @@ class CatalogModelTests(TestCase):
             self.assertEqual(self.d["cat"].name, "Sneakers")
 
 
+class SeedDemoTests(TestCase):
+    """M8 — flush reseeds cleanly, keeps users, one image per color per product."""
+
+    def test_flush_keeps_users_and_ensures_color_images(self):
+        import tempfile
+        from django.contrib.auth import get_user_model
+        from django.core.management import call_command
+        from django.test import override_settings
+
+        User = get_user_model()
+        keeper = User.objects.create_user(email="keep@test.com", password="x")
+        # A junk product that --flush must purge.
+        junk_cat = Category.objects.create(name_en="Junk", name_ar="خردة", slug="junk")
+        Product.objects.create(category=junk_cat, name_en="underarmor tshirt",
+                               name_ar="تي شيرت", slug="underarmor-tshirt", base_price=Decimal("1.00"))
+
+        with tempfile.TemporaryDirectory() as media:
+            with override_settings(MEDIA_ROOT=media):
+                call_command("seed_demo", "--flush", verbosity=0)
+
+        # Users are preserved; junk is gone.
+        self.assertTrue(User.objects.filter(email="keep@test.com").exists())
+        self.assertFalse(Product.objects.filter(slug="underarmor-tshirt").exists())
+        self.assertTrue(Product.objects.exists())
+        # Every product has at least one image for each of its variant colors.
+        for p in Product.objects.prefetch_related("variants__color", "images"):
+            variant_colors = {v.color_id for v in p.variants.all()}
+            image_colors = {i.color_id for i in p.images.all()}
+            self.assertTrue(variant_colors.issubset(image_colors), p.slug)
+
+
+class MoneyFormatTests(TestCase):
+    """M1.3 — prices are canonical ``$X.YY`` (dot-decimal) in every language."""
+
+    def test_format_money_basic_and_types(self):
+        from .money import format_money
+        self.assertEqual(format_money(Decimal("79")), "$79.00")
+        self.assertEqual(format_money(Decimal("79.5")), "$79.50")
+        self.assertEqual(format_money("105.00"), "$105.00")
+        self.assertEqual(format_money(0), "$0.00")
+        self.assertEqual(format_money(None), "$0.00")
+
+    def test_format_money_rounds_half_up(self):
+        from .money import format_money
+        self.assertEqual(format_money(Decimal("1.005")), "$1.01")
+
+    def test_dot_decimal_even_under_arabic_locale(self):
+        from django.utils.translation import override
+        from .money import format_money
+        with override("ar"):
+            self.assertEqual(format_money(Decimal("79.00")), "$79.00")
+
+    def test_money_filter_matches_util(self):
+        from .templatetags.store_extras import money
+        self.assertEqual(money(Decimal("12.3")), "$12.30")
+
+
 class CatalogViewTests(TestCase):
     def setUp(self):
         self.d = CatalogTestData.build()

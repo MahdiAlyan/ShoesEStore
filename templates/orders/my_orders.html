@@ -1,5 +1,5 @@
 {% extends "base_store.html" %}
-{% load i18n %}
+{% load i18n store_extras %}
 
 {% block title %}{% trans "My Orders" %} — {% trans "ShoeStore" %}{% endblock %}
 
@@ -24,10 +24,10 @@
                 <tbody>
                     {% for order in orders %}
                     <tr>
-                        <td class="ps-5 fw-bold">#{{ order.pk }}</td>
+                        <td class="ps-5 fw-bold">#{{ order.order_number }}</td>
                         <td class="text-muted">{{ order.created_at|date:"Y-m-d H:i" }}</td>
                         <td>{{ order.items.all|length }}</td>
-                        <td class="fw-semibold">${{ order.total }}</td>
+                        <td class="fw-semibold">{{ order.total|money }}</td>
                         <td>{% include "orders/_status_badge.html" with order=order %}</td>
                         <td><a href="{% url 'orders:success' order.pk %}" class="btn btn-sm btn-light-primary">{% trans "View" %}</a></td>
                     </tr>

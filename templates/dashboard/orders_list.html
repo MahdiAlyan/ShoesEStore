@@ -1,5 +1,5 @@
 {% extends "base_dashboard.html" %}
-{% load i18n static %}
+{% load i18n static store_extras %}
 
 {% block page_title %}{% trans "Orders" %}{% endblock %}
 
@@ -29,10 +29,10 @@
         <tbody>
             {% for order in orders %}
             <tr data-order-row="{{ order.pk }}">
-                <td class="ps-5"><a href="{% url 'dashboard:order_detail' order.pk %}" class="fw-bold">#{{ order.pk }}</a><div class="fs-8 text-muted">{{ order.created_at|date:"Y-m-d H:i" }}</div></td>
+                <td class="ps-5"><a href="{% url 'dashboard:order_detail' order.pk %}" class="fw-bold">#{{ order.order_number }}</a><div class="fs-8 text-muted">{{ order.created_at|date:"Y-m-d H:i" }}</div></td>
                 <td>{{ order.receiver_name }}</td>
                 <td dir="ltr">{{ order.receiver_phone }}</td>
-                <td class="fw-semibold">${{ order.total }}</td>
+                <td class="fw-semibold">{{ order.total|money }}</td>
                 <td><span data-status-badge="{{ order.pk }}" class="badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
                 <td>
                     <select class="form-select form-select-sm status-select" data-order-id="{{ order.pk }}" data-ok-msg="{% trans 'Status updated.' %}" style="width:auto">

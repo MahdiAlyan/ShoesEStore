@@ -1,5 +1,5 @@
 {% extends "base_dashboard.html" %}
-{% load i18n %}
+{% load i18n store_extras %}
 
 {% block page_title %}{% trans "Overview" %}{% endblock %}
 
@@ -27,7 +27,7 @@
     <div class="col-6 col-xl-3">
         <div class="card border h-100"><div class="card-body">
             <div class="text-muted fw-semibold">{% trans "Revenue (delivered)" %}</div>
-            <div class="fs-1 fw-bold text-success">${{ revenue }}</div>
+            <div class="fs-1 fw-bold text-success">{{ revenue|money }}</div>
         </div></div>
     </div>
 </div>
@@ -42,9 +42,9 @@
                     <tbody>
                         {% for order in recent_orders %}
                         <tr>
-                            <td class="ps-5"><a href="{% url 'dashboard:order_detail' order.pk %}" class="fw-bold">#{{ order.pk }}</a></td>
+                            <td class="ps-5"><a href="{% url 'dashboard:order_detail' order.pk %}" class="fw-bold">#{{ order.order_number }}</a></td>
                             <td>{{ order.receiver_name }}</td>
-                            <td>${{ order.total }}</td>
+                            <td>{{ order.total|money }}</td>
                             <td>{% include "orders/_status_badge.html" with order=order %}</td>
                         </tr>
                         {% empty %}

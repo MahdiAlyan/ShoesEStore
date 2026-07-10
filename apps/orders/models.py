@@ -54,9 +54,18 @@ class Region(models.Model):
         return localized(self, "name")
 
 
+# Order numbers are human-facing and start at 1000 (spec M2). pk stays the
+# internal key for URLs/FKs.
+ORDER_NUMBER_START = 1000
+
+
 class Order(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders", verbose_name=_("user")
+    )
+    # Assigned inside the create_order transaction; never user-editable.
+    order_number = models.PositiveIntegerField(
+        _("order number"), unique=True, editable=False, null=True, blank=True
     )
     receiver_name = models.CharField(_("receiver name"), max_length=150)
     receiver_phone = models.CharField(_("receiver phone"), max_length=20, validators=[validate_phone])
@@ -84,7 +93,18 @@ class Order(models.Model):
         ]
 
     def __str__(self):
-        return f"Order #{self.pk}"
+        return f"Order #{self.order_number or self.pk}"
+
+    @classmethod
+    def next_order_number(cls):
+        """Next human-facing order number: ``max(existing, 999) + 1`` (M2).
+
+        Call inside the order-creation transaction. The unique constraint is the
+        final backstop against a concurrent-insert race (see ASSUMPTIONS A16).
+        """
+        from django.db.models import Max
+        current = cls.objects.aggregate(m=Max("order_number"))["m"] or 0
+        return max(current, ORDER_NUMBER_START - 1) + 1
 
     def get_absolute_url(self):
         return reverse("orders:success", kwargs={"pk": self.pk})

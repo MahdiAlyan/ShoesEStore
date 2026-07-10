@@ -62,7 +62,7 @@ class FinalDoDTests(TestCase):
         self.assertTrue(wl.startswith("https://wa.me/9613445566?text="), wl)  # single 0 stripped, +961 added
         from urllib.parse import unquote
         msg = unquote(wl.split("text=", 1)[1])
-        self.assertIn(f"Order #{order.pk} — ShoeStore", msg)
+        self.assertIn(f"Order #{order.order_number} — ShoeStore", msg)
         self.assertIn("Please reply to CONFIRM your order.", msg)
         self.assertIn("الرجاء الرد لتأكيد الطلب.", msg)  # bilingual
         self.assertIn(f"Total: ${order.total:.2f}", msg)
@@ -73,7 +73,7 @@ class FinalDoDTests(TestCase):
         order.refresh_from_db()
         self.assertEqual(order.status, OrderStatus.CONFIRMED)
         # 9. Visible in customer's My Orders
-        self.assertContains(c.get(lang_prefix + "/orders/mine/"), f"#{order.pk}")
+        self.assertContains(c.get(lang_prefix + "/orders/mine/"), f"#{order.order_number}")
         return msg
 
     def test_full_flow_english(self):

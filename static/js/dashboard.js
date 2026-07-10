@@ -1,37 +1,24 @@
-/* Dashboard: AJAX order status changes. */
+/* Dashboard: AJAX order status changes (M5: SweetAlert2 confirm + feedback). */
 (function () {
     "use strict";
     function csrf() { return window.CSRF_TOKEN || ""; }
 
-    var STATUS_MSG = {
-        ok: "Status updated.",
-        fail: "Could not update status.",
-    };
-
+    function i18n(key, fallback) {
+        return (window.SS && window.SS.i18n && window.SS.i18n[key]) || fallback;
+    }
     function notify(message, type) {
-        var el = document.getElementById("dash-alerts");
-        if (!el) {
-            el = document.createElement("div");
-            el.id = "dash-alerts";
-            el.style.cssText = "position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:1080;max-width:520px;width:90%";
-            document.body.appendChild(el);
+        var kind = type === "danger" ? "error" : (type === "success" ? "success" : "info");
+        if (window.ShoeStore) {
+            if (kind === "error") { window.ShoeStore.alert("error", i18n("error", "Error"), message); }
+            else { window.ShoeStore.toast(kind, message); }
+        } else {
+            window.alert(message);
         }
-        var wrap = document.createElement("div");
-        wrap.className = "alert alert-" + (type || "primary") + " alert-dismissible fade show shadow-sm";
-        wrap.textContent = message;
-        var b = document.createElement("button");
-        b.type = "button"; b.className = "btn-close"; b.setAttribute("data-bs-dismiss", "alert");
-        wrap.appendChild(b);
-        el.appendChild(wrap);
-        setTimeout(function () { wrap.remove(); }, 4000);
     }
 
-    document.addEventListener("change", function (e) {
-        var sel = e.target.closest && e.target.closest(".status-select");
-        if (!sel) return;
+    function applyStatus(sel) {
         var id = sel.dataset.orderId;
         var newStatus = sel.value;
-        var prev = sel.dataset.prev || sel.options[0].value;
         fetch("/api/admin/orders/" + id + "/status/", {
             method: "PATCH",
             headers: { "Content-Type": "application/json", "X-CSRFToken": csrf() },
@@ -47,13 +34,48 @@
                     badge.className = "badge status-" + res.data.status;
                     badge.textContent = res.data.status_display;
                 }
-                notify(sel.dataset.okMsg || STATUS_MSG.ok, "success");
+                notify(sel.dataset.okMsg || i18n("success", "Status updated."), "success");
             } else {
-                notify(res.data.detail || STATUS_MSG.fail, "danger");
+                notify(res.data.detail || i18n("error", "Could not update status."), "danger");
                 if (sel.dataset.prev) sel.value = sel.dataset.prev;  // revert on invalid transition
             }
         });
-    });
+    }
+
+    function onStatusChange(sel) {
+        var prev = sel.dataset.prev || sel.options[0].value;
+        if (sel.value === prev) return;
+        function revert() {
+            sel.value = prev;
+            if (window.jQuery) { window.jQuery(sel).trigger("change.select2"); }  // sync select2 UI
+        }
+        // Confirm the change first (M5).
+        if (window.ShoeStore && window.ShoeStore.confirm) {
+            window.ShoeStore.confirm({
+                icon: "question",
+                title: i18n("statusChangeTitle", "Change order status?"),
+                confirmText: i18n("statusChangeConfirm", "Yes, change it"),
+                cancelText: i18n("cancel", "Cancel"),
+                confirmColor: "#009ef7",
+            }).then(function (res) {
+                if (res && res.isConfirmed) { applyStatus(sel); }
+                else { revert(); }
+            });
+        } else {
+            applyStatus(sel);
+        }
+    }
+
+    // Bind via jQuery so select2's change (jQuery-triggered) reaches us; fall back
+    // to native delegation if jQuery is unavailable.
+    if (window.jQuery) {
+        window.jQuery(document).on("change", ".status-select", function () { onStatusChange(this); });
+    } else {
+        document.addEventListener("change", function (e) {
+            var sel = e.target.closest && e.target.closest(".status-select");
+            if (sel) onStatusChange(sel);
+        });
+    }
 
     // Seed prev value for revert.
     document.querySelectorAll(".status-select").forEach(function (s) {

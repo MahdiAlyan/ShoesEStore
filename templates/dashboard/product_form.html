@@ -27,7 +27,16 @@
         <div class="col-lg-5">
             {# ===== Variants ===== #}
             <div class="card border mb-6"><div class="card-body">
-                <h3 class="fs-5 fw-bold mb-4">{% trans "Variants & stock" %}</h3>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fs-5 fw-bold m-0">{% trans "Variants & stock" %}</h3>
+                    {% if product %}
+                        <button type="button" class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#bulk-variants-modal">
+                            <i class="ki-duotone ki-plus fs-5"></i>{% trans "Add variants" %}
+                        </button>
+                    {% else %}
+                        <span class="fs-8 text-muted">{% trans "Save the product to bulk-add variants." %}</span>
+                    {% endif %}
+                </div>
                 {{ variants.management_form }}
                 {% if variants.non_form_errors %}<div class="alert alert-danger">{{ variants.non_form_errors }}</div>{% endif %}
                 <div class="table-responsive"><table class="table table-sm align-middle">
@@ -71,4 +80,107 @@
         <a href="{% url 'dashboard:products' %}" class="btn btn-light">{% trans "Cancel" %}</a>
     </div>
 </form>
+
+{% if product %}
+{# ===== Bulk "Add variants" modal (M6.3) ===== #}
+<div class="modal fade" id="bulk-variants-modal" tabindex="-1" aria-hidden="true" aria-labelledby="bulk-variants-title">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-4 fw-bold" id="bulk-variants-title">{% trans "Add variants" %}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body">
+                <div class="fs-7 text-muted mb-4">{% trans "Generates every color × size combination that doesn't already exist." %}</div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold" for="bulk-colors">{% trans "Colors" %}</label>
+                    <select id="bulk-colors" class="form-select" multiple data-no-select2 data-placeholder="{% trans 'Select colors' %}">
+                        {% for c in all_colors %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold" for="bulk-sizes">{% trans "Sizes" %}</label>
+                    <select id="bulk-sizes" class="form-select" multiple data-no-select2 data-placeholder="{% trans 'Select sizes' %}">
+                        {% for s in all_sizes %}<option value="{{ s.id }}">{{ s.value }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="row g-4">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold" for="bulk-stock">{% trans "Default stock" %}</label>
+                        <input type="number" id="bulk-stock" class="form-control" value="0" min="0" />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold" for="bulk-prefix">{% trans "SKU prefix (optional)" %}</label>
+                        <input type="text" id="bulk-prefix" class="form-control" placeholder="{{ product.slug }}" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <button type="button" class="btn btn-primary" id="bulk-submit"
+                        data-url="/api/admin/products/{{ product.pk }}/variants/bulk/"
+                        data-result-tmpl="{% trans '{created} variants created, {skipped} skipped.' %}"
+                        data-need-msg="{% trans 'Select at least one color and one size.' %}">
+                    {% trans "Create variants" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var jq = window.jQuery;
+    var modalEl = document.getElementById("bulk-variants-modal");
+    var submit = document.getElementById("bulk-submit");
+    if (!modalEl || !submit || !jq) { return; }
+    var rtl = !!(window.SS && window.SS.rtl);
+
+    // Initialize the multi-selects when the modal is visible (avoids width:0).
+    jq(modalEl).on("shown.bs.modal", function () {
+        jq(modalEl).find("select").each(function () {
+            var $s = jq(this);
+            if (!$s.hasClass("select2-hidden-accessible")) {
+                $s.select2({ dir: rtl ? "rtl" : "ltr", width: "100%", dropdownParent: jq(modalEl), placeholder: $s.data("placeholder") });
+            }
+        });
+    });
+
+    submit.addEventListener("click", function () {
+        var colorIds = jq("#bulk-colors").val() || [];
+        var sizeIds = jq("#bulk-sizes").val() || [];
+        if (!colorIds.length || !sizeIds.length) {
+            window.ShoeStore.alert("warning", submit.dataset.needMsg, "");
+            return;
+        }
+        var stock = parseInt(document.getElementById("bulk-stock").value || "0", 10) || 0;
+        var prefix = document.getElementById("bulk-prefix").value || "";
+        submit.disabled = true;
+        fetch(submit.dataset.url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRFToken": window.CSRF_TOKEN || "" },
+            credentials: "same-origin",
+            body: JSON.stringify({ color_ids: colorIds, size_ids: sizeIds, stock: stock, sku_prefix: prefix }),
+        }).then(function (r) {
+            return r.json().then(function (d) { return { ok: r.ok, d: d }; });
+        }).then(function (res) {
+            submit.disabled = false;
+            if (res.ok) {
+                var msg = submit.dataset.resultTmpl
+                    .replace("{created}", res.d.created).replace("{skipped}", res.d.skipped);
+                bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                if (window.Swal) {
+                    window.Swal.fire({ icon: "success", title: (window.SS && window.SS.i18n.success) || "Success", text: msg })
+                        .then(function () { window.location.reload(); });
+                } else { window.location.reload(); }
+            } else {
+                window.ShoeStore.alert("error", (window.SS && window.SS.i18n.error) || "Error", res.d.detail || "");
+            }
+        });
+    });
+})();
+</script>
 {% endblock %}

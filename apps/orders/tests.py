@@ -93,6 +93,18 @@ class OrderServiceTests(TestCase):
         ok, err = change_status(order, OrderStatus.DELIVERED)  # PENDING -> DELIVERED not allowed
         self.assertFalse(ok)
 
+    def test_first_order_number_is_1000_and_sequences(self):
+        first = self._order(qty=1)  # clears the cart after creating the order
+        self.assertEqual(first.order_number, 1000)
+        second = self._order(qty=1)  # reuse the (now empty) cart
+        self.assertEqual(second.order_number, 1001)
+
+    def test_order_number_starts_above_existing_max(self):
+        # Simulate a legacy/backfilled order already at 1005.
+        Order.objects.filter(pk=self._order(qty=1).pk).update(order_number=1005)
+        nxt = self._order(qty=1)
+        self.assertEqual(nxt.order_number, 1006)
+
 
 class WhatsAppTests(TestCase):
     def setUp(self):
@@ -109,7 +121,7 @@ class WhatsAppTests(TestCase):
 
     def test_message_structure_and_bilingual_line(self):
         msg = build_whatsapp_message(self.order)
-        self.assertIn(f"Order #{self.order.pk} — ShoeStore", msg)
+        self.assertIn(f"Order #{self.order.order_number} — ShoeStore", msg)
         self.assertIn("Please reply to CONFIRM your order.", msg)
         self.assertIn("الرجاء الرد لتأكيد الطلب.", msg)  # bilingual
         self.assertIn("Total: $105.00", msg)
@@ -155,14 +167,17 @@ class CheckoutFlowTests(TestCase):
         self.assertEqual(self.red40.stock, 3)
         self.assertEqual(order.receiver_phone, "+9613999888")  # normalized (leading 0 stripped)
 
-    def test_online_payment_redirects_to_placeholder_without_order(self):
+    def test_online_payment_bounces_to_checkout_without_order(self):
+        # M3: ONLINE is handled by the checkout modal (reverts to COD). The
+        # server-side guard never creates an ONLINE order — it bounces back to
+        # checkout. The old static /payment/online/ route is removed.
         self._add_to_cart(1)
         self.client.force_login(self.user)
         resp = self.client.post(reverse("orders:checkout"), {
             "receiver_name": "Ali", "receiver_phone": "03999888",
             "region": self.region.id, "address": "Street 1", "payment_method": "ONLINE",
         })
-        self.assertRedirects(resp, reverse("orders:online_payment"))
+        self.assertRedirects(resp, reverse("orders:checkout"))
         self.assertFalse(Order.objects.filter(user=self.user).exists())
 
     def test_api_order_create_and_list_mine(self):
@@ -191,6 +206,6 @@ class CheckoutFlowTests(TestCase):
         self._add_to_cart(1)
         self.client.force_login(self.user)
         # reverse() yields the unprefixed (English) path; prepend /ar for Arabic.
-        for path in ["/orders/checkout/", "/orders/payment/online/", "/orders/mine/"]:
+        for path in ["/orders/checkout/", "/orders/mine/"]:
             self.assertEqual(self.client.get(path).status_code, 200, path)
             self.assertEqual(self.client.get("/ar" + path).status_code, 200, "/ar" + path)

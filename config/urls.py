@@ -18,7 +18,7 @@ urlpatterns += i18n_patterns(
     path("accounts/", include("apps.accounts.urls")),
     path("cart/", include("apps.cart.urls")),
     path("orders/", include("apps.orders.urls")),
-    path("admin/", include("apps.dashboard.urls")),
+    path("dashboard/", include("apps.dashboard.urls")),
     prefix_default_language=False,
 )
 

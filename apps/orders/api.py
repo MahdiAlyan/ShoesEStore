@@ -110,7 +110,7 @@ class AdminOrderViewSet(viewsets.ViewSet):
         if q:
             flt = Q(receiver_name__icontains=q) | Q(receiver_phone__icontains=q)
             if q.isdigit():
-                flt |= Q(pk=int(q))
+                flt |= Q(order_number=int(q))
             qs = qs.filter(flt)
         return Response(OrderSerializer(qs, many=True, context={"request": request}).data)
 
