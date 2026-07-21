@@ -1,17 +1,23 @@
 {% load i18n static %}<!DOCTYPE html>
+{% comment %}Standalone (no base): renders on server error with minimal context. Self-hosted design-system CSS only.{% endcomment %}
 <html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
 <head>
     <title>{% trans "Server error" %} — {% trans "ShoeStore" %}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="{% static 'metronic/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23A8441F'/%3E%3C/svg%3E" />
+    <link href="{% static 'css/tokens.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/base.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/components.css' %}" rel="stylesheet" />
 </head>
-<body class="app-blank">
-<div class="container text-center py-20">
-    <h1 class="display-1 fw-bold text-danger">500</h1>
-    <p class="fs-3 fw-semibold">{% trans "Something went wrong on our end." %}</p>
-    <p class="fs-5 text-muted mb-8">{% trans "Please try again in a moment." %}</p>
-    <a href="/" class="btn btn-primary">{% trans "Back to home" %}</a>
+<body>
+<div class="container" style="padding-block:var(--space-9)">
+    <div class="empty-state">
+        <div class="empty-state-glyph" aria-hidden="true">500</div>
+        <h1 style="font-size:var(--text-2xl);margin-block-end:var(--space-2)">{% trans "Something went wrong on our end." %}</h1>
+        <p>{% trans "Please try again in a moment." %}</p>
+        <a href="/" class="btn btn-primary">{% trans "Back to home" %}</a>
+    </div>
 </div>
 </body>
 </html>

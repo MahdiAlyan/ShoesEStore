@@ -1,0 +1,19 @@
+{% load i18n %}
+{% comment %}
+Order status timeline: PENDING → CONFIRMED → OUT_FOR_DELIVERY → DELIVERED.
+CANCELLED / RETURNED are terminal off-flow states shown as a banner.
+Pass `order`. Completed-step styling is driven by data-current (see components.css).
+{% endcomment %}
+{% if order.status == 'CANCELLED' or order.status == 'RETURNED' %}
+    <div class="timeline-terminal timeline-terminal--{{ order.status }}">
+        <span aria-hidden="true">{% if order.status == 'CANCELLED' %}✕{% else %}↩{% endif %}</span>
+        {{ order.get_status_display }}
+    </div>
+{% else %}
+    <ol class="status-timeline" data-current="{{ order.status }}" aria-label="{% trans 'Order status' %}">
+        <li class="timeline-step"><span class="timeline-dot" aria-hidden="true"></span>{% trans "Pending" %}</li>
+        <li class="timeline-step"><span class="timeline-dot" aria-hidden="true"></span>{% trans "Confirmed" %}</li>
+        <li class="timeline-step"><span class="timeline-dot" aria-hidden="true"></span>{% trans "Out for delivery" %}</li>
+        <li class="timeline-step"><span class="timeline-dot" aria-hidden="true"></span>{% trans "Delivered" %}</li>
+    </ol>
+{% endif %}

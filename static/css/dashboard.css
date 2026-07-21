@@ -1,0 +1,471 @@
+/* ==========================================================================
+   ShoeStore dashboard — sidebar, header, content, stat tiles, panels, tables.
+   State classes (dash-collapsed, dash-drawer-open) are toggled by ui.js.
+   ========================================================================== */
+
+.dash-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+
+.dash-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--dash-sidebar-w);
+  background: var(--color-espresso);
+  color: var(--color-espresso-ink);
+  padding: var(--space-5) var(--space-4);
+  transition: width var(--dur) var(--ease);
+  overflow: hidden;
+}
+
+.dash-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-espresso-ink);
+  margin-block-end: var(--space-7);
+  white-space: nowrap;
+}
+
+.dash-brand:hover {
+  color: var(--color-espresso-ink);
+}
+
+.dash-brand .brand-dot {
+  color: var(--color-accent);
+}
+
+/* Monogram shown only in the collapsed rail (brand text is hidden there). */
+.dash-brand-mark {
+  display: none;
+}
+
+.dash-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-block-end: auto;
+  list-style: none;
+  padding: 0;
+}
+
+.dash-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  color: var(--color-espresso-muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.dash-nav-link svg {
+  flex-shrink: 0;
+}
+
+.dash-nav-link:hover {
+  color: var(--color-espresso-ink);
+  background: var(--overlay-on-dark);
+}
+
+.dash-nav-link.active {
+  color: var(--color-espresso-ink);
+  background: var(--overlay-on-dark-strong);
+}
+
+/* Active indicator: a short accent bar on the inline-start edge. */
+.dash-nav-link.active::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -4px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+}
+
+.dash-cta {
+  margin-block-start: var(--space-6);
+}
+
+/* Desktop collapsed rail */
+
+@media (min-width: 992px) {
+  .dash-collapsed .dash-sidebar {
+    width: var(--dash-sidebar-w-collapsed);
+    padding-inline: var(--space-3);
+  }
+
+  .dash-collapsed .dash-label,
+  .dash-collapsed .dash-cta {
+    display: none;
+  }
+
+  .dash-collapsed .dash-nav-link {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .dash-collapsed .dash-brand {
+    justify-content: center;
+  }
+
+  .dash-collapsed .dash-brand-mark {
+    display: inline;
+  }
+
+  /* Tooltip for icon-only links (content from data-tip). */
+  .dash-collapsed .dash-nav-link::after {
+    content: attr(data-tip);
+    position: absolute;
+    inset-inline-start: calc(100% + 10px);
+    background: var(--color-ink);
+    color: var(--color-bg);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease);
+    z-index: var(--z-dropdown);
+  }
+
+  .dash-collapsed .dash-nav-link:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Mobile drawer */
+
+@media (max-width: 991.98px) {
+  .dash-sidebar {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: var(--z-dialog);
+    /* transform is physical: slide off-screen toward the start edge. */
+    transform: translateX(-100%);
+    /* visibility keeps the off-screen links out of the tab order; the delay
+       lets the slide-out finish before they vanish. */
+    visibility: hidden;
+    transition: transform var(--dur) var(--ease),
+      visibility 0s linear var(--dur);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* RTL: the start edge is on the right, so slide the other way. */
+  [dir="rtl"] .dash-sidebar {
+    transform: translateX(100%);
+  }
+
+  .dash-drawer-open .dash-sidebar,
+  [dir="rtl"] .dash-drawer-open .dash-sidebar {
+    transform: none;
+    visibility: visible;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .dash-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-dialog) - 1);
+    background: var(--color-scrim);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .dash-drawer-open .dash-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .dash-backdrop {
+    display: none;
+  }
+}
+
+/* Content column */
+
+.dash-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border-block-end: 1px solid var(--color-line);
+  padding: var(--space-3) var(--space-5);
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-sticky);
+}
+
+.dash-title {
+  font-size: var(--text-xl);
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dash-main {
+  flex-grow: 1;
+  padding: var(--space-5);
+  max-width: 1400px;
+  width: 100%;
+}
+
+/* Stat tiles */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-block-end: var(--space-5);
+}
+
+@media (min-width: 1000px) {
+  .stat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-block-start: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value--warning { color: var(--color-warning); }
+.stat-value--danger { color: var(--color-danger); }
+.stat-value--success { color: var(--color-success); }
+
+.stat-note {
+  font-size: var(--text-xs);
+  color: var(--color-ink-faint);
+  margin-block-start: var(--space-1);
+}
+
+/* Panels + content grid */
+
+.dash-cols {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* Let grid items shrink below their content's min-content width so wide
+   tables scroll inside their .table-wrap instead of stretching the track. */
+.dash-cols > * {
+  min-width: 0;
+}
+
+@media (min-width: 992px) {
+  .dash-cols {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: start;
+  }
+
+  /* Form + table CRUD pages: fixed-width form, fluid table. */
+  .dash-cols--form {
+    grid-template-columns: 360px 1fr;
+  }
+}
+
+.dash-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block-end: var(--space-5);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 500;
+}
+
+.checkbox-row input {
+  width: auto;
+}
+
+/* Compact variant formset table. */
+.dash-table--compact th,
+.dash-table--compact td {
+  padding: var(--space-2);
+}
+
+.dash-table--compact select,
+.dash-table--compact input {
+  padding: 0.35rem 0.5rem;
+  font-size: var(--text-sm);
+  min-width: 3.5rem;
+}
+
+.dash-form-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-block-start: var(--space-5);
+}
+
+.image-row {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  margin-block-end: var(--space-3);
+}
+
+.image-row-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.dash-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-block-end: 1px solid var(--color-line);
+}
+
+.panel-title {
+  font-size: var(--text-base);
+  font-weight: 650;
+  margin: 0;
+}
+
+.panel-body {
+  padding: var(--space-5);
+}
+
+/* Dashboard tables: comfortable padding, sticky header, zebra-free hairlines. */
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dash-table th {
+  position: sticky;
+  inset-block-start: 0;
+  background: var(--color-surface-sunken);
+  white-space: nowrap;
+  padding: var(--space-3) var(--space-4);
+}
+
+.dash-table td {
+  padding: var(--space-3) var(--space-4);
+  border-block-start: 1px solid var(--color-line);
+  vertical-align: middle;
+}
+
+.dash-table tbody tr:hover td {
+  background: var(--color-surface-sunken);
+}
+
+.dash-table .cell-strong {
+  font-weight: 600;
+}
+
+.dash-table .cell-sub {
+  font-size: var(--text-xs);
+  color: var(--color-ink-muted);
+}
+
+/* Compact filter/search toolbar. */
+.dash-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+  margin-block-end: var(--space-5);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+}
+
+.dash-toolbar .field {
+  margin-block-end: 0;
+}
+
+.dash-toolbar .toolbar-grow {
+  flex: 1;
+  min-width: 12rem;
+}
+
+/* Compact select used inline in tables (status change) + toolbar. */
+.select-sm {
+  width: auto;
+  min-width: 9rem;
+  padding-block: 0.4rem;
+}
+
+.totals-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-end;
+  margin-block-start: var(--space-4);
+}
+
+.totals-list .cart-summary-row {
+  min-width: 14rem;
+}

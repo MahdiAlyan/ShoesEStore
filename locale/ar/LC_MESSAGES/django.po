@@ -947,3 +947,33 @@ msgstr "مسجّل الدخول باسم"
 
 msgid "Storefront"
 msgstr "المتجر"
+
+msgid "Breadcrumb"
+msgstr "مسار التنقل"
+
+msgid "Cash on delivery"
+msgstr "الدفع عند الاستلام"
+
+msgid "Menu"
+msgstr "القائمة"
+
+msgid "Order status"
+msgstr "حالة الطلب"
+
+msgid "View all"
+msgstr "عرض الكل"
+
+msgid "WhatsApp"
+msgstr "واتساب"
+
+msgid "items"
+msgstr "منتجات"
+
+msgid "{{ counter }} item"
+msgid_plural "{{ counter }} items"
+msgstr[0] "{{ counter }} منتج"
+msgstr[1] "{{ counter }} منتج"
+msgstr[2] "{{ counter }} منتجان"
+msgstr[3] "{{ counter }} منتجات"
+msgstr[4] "{{ counter }} منتجًا"
+msgstr[5] "{{ counter }} منتج"

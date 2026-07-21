@@ -2,11 +2,13 @@
 {% load i18n %}
 {% block title %}{% trans "Page not found" %} — {% trans "ShoeStore" %}{% endblock %}
 {% block content %}
-<div class="container-xxl text-center py-20">
-    <h1 class="display-1 fw-bold text-primary">404</h1>
-    <p class="fs-3 fw-semibold text-gray-800">{% trans "We couldn't find that page." %}</p>
-    <p class="fs-5 text-muted mb-8">{% trans "The page you are looking for may have been moved or removed." %}</p>
-    {% url 'catalog:home' as home_url %}
-    <a href="{{ home_url }}" class="btn btn-primary">{% trans "Back to home" %}</a>
+<div class="container section">
+    <div class="empty-state">
+        <div class="empty-state-glyph" aria-hidden="true">404</div>
+        <h1 class="section-title" style="margin-block-end:var(--space-2)">{% trans "We couldn't find that page." %}</h1>
+        <p>{% trans "The page you are looking for may have been moved or removed." %}</p>
+        {% url 'catalog:home' as home_url %}
+        <a href="{{ home_url }}" class="btn btn-primary">{% trans "Back to home" %}</a>
+    </div>
 </div>
 {% endblock %}

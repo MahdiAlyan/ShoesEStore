@@ -4,93 +4,99 @@
 {% block title %}{% trans "All Shoes" %} — {% trans "ShoeStore" %}{% endblock %}
 
 {% block content %}
-<div class="container-xxl py-8">
-    <h1 class="fs-2 fw-bold mb-6">{% trans "All Shoes" %}</h1>
-    <div class="row g-6">
-        {# ===== Filters sidebar ===== #}
-        <aside class="col-lg-3">
-            <form method="get" class="card border p-5 filters-sticky">
-                <h2 class="fs-5 fw-bold mb-4">{% trans "Filters" %}</h2>
+<div class="container section">
+    <div class="section-head">
+        <h1 class="section-title">{% trans "All Shoes" %}</h1>
+        {% if page_obj %}<span class="section-count tnum">{{ page_obj.paginator.count }} {% trans "items" %}</span>{% endif %}
+    </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-semibold" for="f-category">{% trans "Category" %}</label>
-                    <select name="category" id="f-category" class="form-select">
-                        <option value="">{% trans "All categories" %}</option>
-                        {% for c in categories %}
-                            <option value="{{ c.slug }}" {% if active.category == c.slug %}selected{% endif %}>{{ c.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-semibold" for="f-color">{% trans "Color" %}</label>
-                    <select name="color" id="f-color" class="form-select">
-                        <option value="">{% trans "Any color" %}</option>
-                        {% for c in colors %}
-                            <option value="{{ c.id }}" {% if active.color == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-semibold" for="f-size">{% trans "Size" %}</label>
-                    <select name="size" id="f-size" class="form-select">
-                        <option value="">{% trans "Any size" %}</option>
-                        {% for s in sizes %}
-                            <option value="{{ s.id }}" {% if active.size == s.id|stringformat:'s' %}selected{% endif %}>{{ s.value }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="row g-2 mb-4">
-                    <div class="col-6">
-                        <label class="form-label fw-semibold" for="f-min">{% trans "Min $" %}</label>
-                        <input type="number" step="0.01" min="0" name="min_price" id="f-min" class="form-control" value="{{ active.min_price }}" />
+    <div class="catalog-layout">
+        {# ===== Filters ===== #}
+        <aside class="catalog-filters">
+            <details class="filter-panel" {% if active.category or active.color or active.size or active.min_price or active.max_price %}open{% endif %}>
+                <summary class="filter-summary">
+                    <span>{% trans "Filters" %}</span>
+                    <svg class="filter-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+                </summary>
+                <form method="get" class="filter-form">
+                    <div class="field">
+                        <label class="form-label" for="f-category">{% trans "Category" %}</label>
+                        <select name="category" id="f-category">
+                            <option value="">{% trans "All categories" %}</option>
+                            {% for c in categories %}
+                                <option value="{{ c.slug }}" {% if active.category == c.slug %}selected{% endif %}>{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label fw-semibold" for="f-max">{% trans "Max $" %}</label>
-                        <input type="number" step="0.01" min="0" name="max_price" id="f-max" class="form-control" value="{{ active.max_price }}" />
+                    <div class="field">
+                        <label class="form-label" for="f-color">{% trans "Color" %}</label>
+                        <select name="color" id="f-color">
+                            <option value="">{% trans "Any color" %}</option>
+                            {% for c in colors %}
+                                <option value="{{ c.id }}" {% if active.color == c.id|stringformat:'s' %}selected{% endif %}>{{ c.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 mb-2">{% trans "Apply filters" %}</button>
-                <a href="{% url 'catalog:product_list' %}" class="btn btn-light w-100">{% trans "Clear" %}</a>
-            </form>
+                    <div class="field">
+                        <label class="form-label" for="f-size">{% trans "Size" %}</label>
+                        <select name="size" id="f-size">
+                            <option value="">{% trans "Any size" %}</option>
+                            {% for s in sizes %}
+                                <option value="{{ s.id }}" {% if active.size == s.id|stringformat:'s' %}selected{% endif %}>{{ s.value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-row">
+                        <div class="field">
+                            <label class="form-label" for="f-min">{% trans "Min $" %}</label>
+                            <input type="number" step="0.01" min="0" name="min_price" id="f-min" value="{{ active.min_price }}" />
+                        </div>
+                        <div class="field">
+                            <label class="form-label" for="f-max">{% trans "Max $" %}</label>
+                            <input type="number" step="0.01" min="0" name="max_price" id="f-max" value="{{ active.max_price }}" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">{% trans "Apply filters" %}</button>
+                    <a href="{% url 'catalog:product_list' %}" class="btn btn-ghost w-100">{% trans "Clear" %}</a>
+                </form>
+            </details>
         </aside>
 
         {# ===== Product grid ===== #}
-        <div class="col-lg-9">
+        <div class="catalog-results">
             {% if products %}
-                <div class="row g-6">
+                <div class="product-grid">
                     {% for product in products %}
                         {% include "catalog/_product_card.html" with product=product %}
                     {% endfor %}
                 </div>
 
                 {% if page_obj.paginator.num_pages > 1 %}
-                    <nav class="mt-8" aria-label="{% trans 'Pagination' %}">
-                        <ul class="pagination justify-content-center">
-                            {% if page_obj.has_previous %}
-                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if filter_qs %}&{{ filter_qs }}{% endif %}">{% trans "Previous" %}</a></li>
+                    <nav class="pagination" aria-label="{% trans 'Pagination' %}">
+                        {% if page_obj.has_previous %}
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if filter_qs %}&{{ filter_qs }}{% endif %}" aria-label="{% trans 'Previous' %}">‹</a>
+                        {% else %}
+                            <span class="page-link is-disabled" aria-hidden="true">‹</span>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if num == page_obj.number %}
+                                <span class="page-link is-active" aria-current="page">{{ num }}</span>
                             {% else %}
-                                <li class="page-item disabled"><span class="page-link">{% trans "Previous" %}</span></li>
+                                <a class="page-link" href="?page={{ num }}{% if filter_qs %}&{{ filter_qs }}{% endif %}">{{ num }}</a>
                             {% endif %}
-                            {% for num in page_obj.paginator.page_range %}
-                                <li class="page-item {% if num == page_obj.number %}active{% endif %}"><a class="page-link" href="?page={{ num }}{% if filter_qs %}&{{ filter_qs }}{% endif %}">{{ num }}</a></li>
-                            {% endfor %}
-                            {% if page_obj.has_next %}
-                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if filter_qs %}&{{ filter_qs }}{% endif %}">{% trans "Next" %}</a></li>
-                            {% else %}
-                                <li class="page-item disabled"><span class="page-link">{% trans "Next" %}</span></li>
-                            {% endif %}
-                        </ul>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if filter_qs %}&{{ filter_qs }}{% endif %}" aria-label="{% trans 'Next' %}">›</a>
+                        {% else %}
+                            <span class="page-link is-disabled" aria-hidden="true">›</span>
+                        {% endif %}
                     </nav>
                 {% endif %}
             {% else %}
-                <div class="text-center text-muted py-20">
-                    <i class="ki-duotone ki-magnifier fs-4x mb-4"><span class="path1"></span><span class="path2"></span></i>
-                    <p class="fs-4">{% trans "No shoes match your filters." %}</p>
-                    <a href="{% url 'catalog:product_list' %}" class="btn btn-light-primary">{% trans "Clear filters" %}</a>
+                <div class="empty-state">
+                    <div class="empty-state-glyph">⊘</div>
+                    <p>{% trans "No shoes match your filters." %}</p>
+                    <a href="{% url 'catalog:product_list' %}" class="btn btn-ghost">{% trans "Clear filters" %}</a>
                 </div>
             {% endif %}
         </div>

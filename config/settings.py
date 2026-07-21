@@ -129,14 +129,12 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "theme_static",
 ]
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    # Compressed (gzip/brotli) WhiteNoise storage. Not the *Manifest* variant:
-    # the bundled Metronic theme references a few optional plugin assets it does
-    # not ship, and manifest hashing errors strictly on those. Compression (the
-    # §13 requirement) is retained. See ASSUMPTIONS.md A7.
+    # Compressed (gzip/brotli) WhiteNoise storage. The bespoke UI is fully
+    # self-hosted under static/ (CSS, ES-module JS, woff2 fonts), so a manifest
+    # variant is a safe future option; compression is retained for now.
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },

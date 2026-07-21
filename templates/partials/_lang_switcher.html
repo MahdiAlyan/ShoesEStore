@@ -1,0 +1,10 @@
+{% load i18n store_extras %}
+{% get_current_language as CUR_LANG %}
+{% get_available_languages as LANGS %}
+<form action="{% url 'set_language' %}" method="post" class="lang-switcher-form">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+    <select name="language" class="lang-switcher" aria-label="{% trans 'Language' %}">
+        {% for code, name in LANGS %}<option value="{{ code }}" data-next="{% switch_lang_url code %}" {% if code == CUR_LANG %}selected{% endif %}>{{ name }}</option>{% endfor %}
+    </select>
+</form>

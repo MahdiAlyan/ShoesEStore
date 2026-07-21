@@ -2,17 +2,17 @@
 {% load i18n %}
 
 {% block content %}
-<div class="d-flex flex-column align-items-center justify-content-center py-15 px-3">
-    <div class="card shadow-sm w-100" style="max-width:480px">
-        <div class="card-body p-8 p-lg-10">
-            <div class="text-center mb-8">
-                <h1 class="fs-2 fw-bold text-gray-900 mb-2">{% block auth_title %}{% endblock %}</h1>
+<div class="auth-shell">
+    <div class="card auth-card">
+        <div class="card-body">
+            <div class="auth-head">
+                <h1 class="auth-title">{% block auth_title %}{% endblock %}</h1>
                 {% block auth_subtitle %}{% endblock %}
             </div>
 
             {% block non_field_errors %}
                 {% if form.non_field_errors %}
-                    <div class="alert alert-danger">
+                    <div class="form-alert form-alert-danger">
                         {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
                     </div>
                 {% endif %}

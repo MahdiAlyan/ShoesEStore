@@ -4,26 +4,32 @@
 {% block title %}{% trans "ShoeStore" %} — {% trans "Quality shoes, cash on delivery" %}{% endblock %}
 
 {% block content %}
-<section class="hero d-flex align-items-center" style="background-image:url('{% static 'img/hero.jpg' %}')">
-    <div class="container-xxl text-center text-white py-10">
-        <h1 class="display-3 fw-bold mb-4">{% trans "Step into quality" %}</h1>
-        <p class="fs-3 text-gray-100 mb-8">{% trans "Browse our collection and pay on delivery." %}</p>
+<section class="hero">
+    <div class="hero-media" style="background-image:url('{% static 'img/hero.jpg' %}')" aria-hidden="true"></div>
+    <div class="container hero-inner">
+        <p class="hero-eyebrow">{% trans "Cash on delivery" %}</p>
+        <h1 class="hero-title">{% trans "Step into quality" %}</h1>
+        <p class="hero-lede">{% trans "Browse our collection and pay on delivery." %}</p>
         {% url 'catalog:product_list' as products_url %}
-        <a href="{{ products_url|default:'/products/' }}" class="btn btn-lg btn-primary">{% trans "Shop now" %}</a>
+        <a href="{{ products_url }}" class="btn btn-primary btn-lg">{% trans "Shop now" %}</a>
     </div>
 </section>
 
-<section class="container-xxl py-10">
-    <h2 class="fs-2 fw-bold mb-6">{% trans "Featured shoes" %}</h2>
+<section class="container section">
+    <div class="section-head">
+        <h2 class="section-title">{% trans "Featured shoes" %}</h2>
+        <a href="{% url 'catalog:product_list' %}" class="section-link">{% trans "View all" %}</a>
+    </div>
     {% if featured_products %}
-        <div class="row g-6">
+        <div class="product-grid">
             {% for product in featured_products %}
                 {% include "catalog/_product_card.html" with product=product %}
             {% endfor %}
         </div>
     {% else %}
-        <div class="text-center text-muted py-10">
-            <p class="fs-5">{% trans "Featured products will appear here soon." %}</p>
+        <div class="empty-state">
+            <div class="empty-state-glyph">◇</div>
+            <p>{% trans "Featured products will appear here soon." %}</p>
         </div>
     {% endif %}
 </section>

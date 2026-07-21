@@ -22,8 +22,8 @@
         });
     }
 
-    // Feedback goes through SweetAlert2 (ShoeStore, defined in site.js). Errors are
-    // modal, everything else a corner toast. Falls back to a plain alert if absent.
+    // Feedback goes through ShoeStore (defined in ui.js). Errors are a dialog,
+    // everything else a corner toast. Falls back to a plain alert if absent.
     function i18n(key, fallback) {
         return (window.SS && window.SS.i18n && window.SS.i18n[key]) || fallback;
     }
@@ -128,7 +128,7 @@
         var btn = e.target.closest && e.target.closest(".cart-remove");
         if (!btn) return;
         var id = btn.dataset.itemId;
-        // Confirm removal via SweetAlert2 (M5).
+        // Confirm removal via ShoeStore.confirm (ui.js).
         if (window.ShoeStore && window.ShoeStore.confirm) {
             window.ShoeStore.confirm({
                 title: i18n("removeTitle", "Remove this item?"),

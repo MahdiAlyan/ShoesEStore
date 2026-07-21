@@ -5,86 +5,81 @@
 {% block meta_description %}{{ product.description|striptags|truncatewords:25 }}{% endblock %}
 
 {% block content %}
-<div class="container-xxl py-8">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb fs-7">
-            <li class="breadcrumb-item"><a href="{% url 'catalog:home' %}">{% trans "Home" %}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'catalog:product_list' %}">{% trans "All Shoes" %}</a></li>
-            <li class="breadcrumb-item active">{{ product.name }}</li>
-        </ol>
+<div class="container section">
+    <nav aria-label="{% trans 'Breadcrumb' %}" class="breadcrumb">
+        <a href="{% url 'catalog:home' %}">{% trans "Home" %}</a>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        <a href="{% url 'catalog:product_list' %}">{% trans "All Shoes" %}</a>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        <span class="breadcrumb-current" aria-current="page">{{ product.name }}</span>
     </nav>
 
-    <div class="row g-8">
+    <div class="pdp">
         {# ===== Gallery ===== #}
-        <div class="col-lg-6">
-            <div class="card border">
-                <div class="card-body">
-                    {% with main=product.main_image %}
-                        <img id="gallery-main" src="{% if main %}{{ main.image.url }}{% endif %}"
-                             class="w-100 rounded mb-4" style="aspect-ratio:1/1;object-fit:cover;background:#f5f5f7"
-                             alt="{{ product.name }}" />
-                    {% endwith %}
-                    {% if images %}
-                        <div class="d-flex flex-wrap gap-2">
-                            {% for img in images %}
-                                <img src="{{ img.image.url }}" class="rounded border gallery-thumb"
-                                     data-color="{{ img.color_id|default:'' }}"
-                                     style="width:64px;height:64px;object-fit:cover;cursor:pointer"
-                                     alt="{{ product.name }}"
-                                     onclick="document.getElementById('gallery-main').src=this.src" />
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+        <div class="pdp-gallery">
+            {% with main=product.main_image %}
+                <div class="pdp-main">
+                    <img id="gallery-main" src="{% if main %}{{ main.image.url }}{% endif %}"
+                         class="pdp-main-img" alt="{{ product.name }}" />
                 </div>
-            </div>
+            {% endwith %}
+            {% if images %}
+                <div class="pdp-thumbs">
+                    {% for img in images %}
+                        <img src="{{ img.image.url }}" class="gallery-thumb"
+                             data-color="{{ img.color_id|default:'' }}"
+                             alt="{{ product.name }}"
+                             onclick="document.getElementById('gallery-main').src=this.src" />
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
 
         {# ===== Info + variant picker ===== #}
-        <div class="col-lg-6">
-            <div class="text-muted text-uppercase fs-8">{{ product.category.name }}</div>
-            <h1 class="fs-1 fw-bold text-gray-900">{{ product.name }}</h1>
-            <div class="fs-2 fw-bold text-primary mb-4">{{ product.base_price|money }}</div>
-            {% if product.description %}<p class="text-gray-700 mb-6">{{ product.description|linebreaksbr }}</p>{% endif %}
+        <div class="pdp-info">
+            <span class="product-cat">{{ product.category.name }}</span>
+            <h1 class="pdp-title">{{ product.name }}</h1>
+            <div class="pdp-price tnum">{{ product.base_price|money }}</div>
+            {% if product.description %}<p class="pdp-desc">{{ product.description|linebreaksbr }}</p>{% endif %}
 
             {{ availability|json_script:"variant-availability" }}
             {{ variant_ids|json_script:"variant-ids" }}
 
             <div id="variant-picker" data-add-url="/api/cart/items/">
                 {# Colors #}
-                <div class="mb-5">
-                    <label class="form-label fw-semibold d-block">{% trans "Color" %}</label>
-                    <div class="d-flex flex-wrap gap-2" id="color-options">
+                <div class="pdp-field">
+                    <label class="pdp-label">{% trans "Color" %}<span class="pdp-label-value" id="color-label"></span></label>
+                    <div class="swatch-row" id="color-options">
                         {% for c in colors %}
                             <button type="button" class="color-swatch" title="{{ c.name }}"
                                     style="background:{{ c.hex_code }}" data-color="{{ c.id }}"
                                     aria-label="{{ c.name }}"></button>
                         {% endfor %}
                     </div>
-                    <div class="fs-7 text-muted mt-1" id="color-label"></div>
                 </div>
 
                 {# Sizes #}
-                <div class="mb-5">
-                    <label class="form-label fw-semibold d-block">{% trans "Size" %}</label>
-                    <div class="d-flex flex-wrap gap-2" id="size-options">
+                <div class="pdp-field">
+                    <label class="pdp-label">{% trans "Size" %}</label>
+                    <div class="size-grid" id="size-options">
                         {% for s in sizes %}
-                            <button type="button" class="btn btn-outline btn-outline-dashed size-btn" data-size="{{ s.id }}">{{ s.value }}</button>
+                            <button type="button" class="size-btn" data-size="{{ s.id }}">{{ s.value }}</button>
                         {% endfor %}
                     </div>
                 </div>
 
                 {# Stock badge #}
-                <div class="mb-5" id="stock-status">
+                <div class="pdp-field" id="stock-status">
                     <span class="badge badge-light">{% trans "Select color and size" %}</span>
                 </div>
 
                 {# Quantity + add to cart #}
-                <div class="d-flex align-items-end gap-3">
-                    <div>
-                        <label class="form-label fw-semibold" for="qty">{% trans "Quantity" %}</label>
-                        <input type="number" id="qty" class="form-control" style="width:90px" value="1" min="1" />
+                <div class="pdp-buy">
+                    <div class="pdp-qty">
+                        <label class="pdp-label" for="qty">{% trans "Quantity" %}</label>
+                        <input type="number" id="qty" value="1" min="1" />
                     </div>
-                    <button type="button" id="add-to-cart" class="btn btn-primary btn-lg flex-grow-1" disabled
+                    <button type="button" id="add-to-cart" class="btn btn-primary btn-lg" disabled
                             data-added-msg="{% trans 'Added to cart.' %}"
                             data-select-msg="{% trans 'Please select a color and size.' %}">
                         {% trans "Add to cart" %}

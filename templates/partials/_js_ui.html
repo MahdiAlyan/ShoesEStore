@@ -1,5 +1,5 @@
 {% load i18n static %}
-{# Site-wide UI layer config (M5): SweetAlert2 + select2. Injected in both bases. #}
+{# Site-wide UI config bridge (i18n strings + flashed messages for api.js/ui.js/cart.js). Injected in both bases. #}
 <script>
 window.SS = {
     rtl: {% if LANGUAGE_BIDI %}true{% else %}false{% endif %},
@@ -9,6 +9,7 @@ window.SS = {
         confirm: "{% trans 'Are you sure?' %}",
         yes: "{% trans 'Yes' %}",
         cancel: "{% trans 'Cancel' %}",
+        close: "{% trans 'Close' %}",
         removeTitle: "{% trans 'Remove this item?' %}",
         removeText: "{% trans 'This item will be removed from your cart.' %}",
         removeConfirm: "{% trans 'Yes, remove' %}",
@@ -21,4 +22,5 @@ window.SS = {
     ]
 };
 </script>
-<script src="{% static 'js/site.js' %}"></script>
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/ui.js' %}"></script>

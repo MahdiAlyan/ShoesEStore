@@ -4,41 +4,47 @@
 {% block title %}{% trans "Order placed" %} #{{ order.order_number }} — {% trans "ShoeStore" %}{% endblock %}
 
 {% block content %}
-<div class="container-xxl py-10">
-    <div class="mx-auto" style="max-width:640px">
-        <div class="text-center mb-8">
-            <i class="ki-duotone ki-check-circle fs-5x text-success mb-3"><span class="path1"></span><span class="path2"></span></i>
-            <h1 class="fs-1 fw-bold">{% blocktrans with num=order.order_number %}Order #{{ num }} placed!{% endblocktrans %}</h1>
-            <p class="fs-5 text-gray-700">{% trans "Thank you! We will contact you on WhatsApp to confirm your order." %}</p>
-            <p class="fs-5 text-gray-700" dir="rtl">سنتواصل معك عبر واتساب لتأكيد طلبك.</p>
+<div class="container section">
+    <div class="success-wrap">
+        <div class="success-head">
+            <div class="success-check" aria-hidden="true">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
+            </div>
+            <h1 class="success-title">{% blocktrans with num=order.order_number %}Order #{{ num }} placed!{% endblocktrans %}</h1>
+            <p class="success-lede">{% trans "Thank you! We will contact you on WhatsApp to confirm your order." %}</p>
+            <p class="success-lede" dir="rtl">سنتواصل معك عبر واتساب لتأكيد طلبك.</p>
         </div>
 
-        <div class="card border">
-            <div class="card-body p-8">
-                <div class="d-flex justify-content-between mb-4">
-                    <span class="fw-bold">{% trans "Status" %}</span>
-                    {% include "orders/_status_badge.html" with order=order %}
+        <div class="card">
+            <div class="card-body">
+                <div class="order-card-timeline" style="margin-block-end:var(--space-5)">
+                    {% include "orders/_status_timeline.html" with order=order %}
                 </div>
-                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Receiver" %}</span><span>{{ order.receiver_name }}</span></div>
-                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Phone" %}</span><span dir="ltr">{{ order.receiver_phone }}</span></div>
-                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Region" %}</span><span>{{ order.region.name }}</span></div>
-                <div class="d-flex justify-content-between mb-4"><span class="text-muted">{% trans "Payment" %}</span><span>{{ order.get_payment_method_display }}</span></div>
 
-                <div class="separator my-3"></div>
+                <dl class="detail-list detail-list--inline">
+                    <div><dt>{% trans "Receiver" %}</dt><dd>{{ order.receiver_name }}</dd></div>
+                    <div><dt>{% trans "Phone" %}</dt><dd dir="ltr">{{ order.receiver_phone }}</dd></div>
+                    <div><dt>{% trans "Region" %}</dt><dd>{{ order.region.name }}</dd></div>
+                    <div><dt>{% trans "Payment" %}</dt><dd>{{ order.get_payment_method_display }}</dd></div>
+                </dl>
+
+                <hr class="menu-sep" />
                 {% for item in order.items.all %}
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>{{ item.product_name }} <span class="text-muted fs-8">{{ item.color_name }} · {{ item.size_value }} × {{ item.quantity }}</span></span>
-                        <span class="fw-semibold">{{ item.line_total|money }}</span>
+                    <div class="checkout-item">
+                        <span class="checkout-item-name">{{ item.product_name }}
+                            <span class="checkout-item-meta">{{ item.color_name }} · {{ item.size_value }} × {{ item.quantity }}</span>
+                        </span>
+                        <span class="fw-semibold tnum">{{ item.line_total|money }}</span>
                     </div>
                 {% endfor %}
-                <div class="separator my-3"></div>
-                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Subtotal" %}</span><span>{{ order.subtotal|money }}</span></div>
-                <div class="d-flex justify-content-between mb-2"><span class="text-muted">{% trans "Delivery" %} ({{ order.region.name }})</span><span>{{ order.delivery_fee|money }}</span></div>
-                <div class="d-flex justify-content-between fs-4 fw-bold mt-2"><span>{% trans "Total" %}</span><span>{{ order.total|money }}</span></div>
+                <hr class="menu-sep" />
+                <div class="cart-summary-row"><span class="text-muted">{% trans "Subtotal" %}</span><span class="tnum">{{ order.subtotal|money }}</span></div>
+                <div class="cart-summary-row"><span class="text-muted">{% trans "Delivery" %} ({{ order.region.name }})</span><span class="tnum">{{ order.delivery_fee|money }}</span></div>
+                <div class="cart-summary-row checkout-total"><span>{% trans "Total" %}</span><span class="tnum">{{ order.total|money }}</span></div>
 
-                <div class="d-flex gap-3 mt-6">
-                    <a href="{% url 'orders:my_orders' %}" class="btn btn-light flex-grow-1">{% trans "My Orders" %}</a>
-                    <a href="{% url 'catalog:product_list' %}" class="btn btn-primary flex-grow-1">{% trans "Continue shopping" %}</a>
+                <div class="success-actions">
+                    <a href="{% url 'orders:my_orders' %}" class="btn btn-ghost w-100">{% trans "My Orders" %}</a>
+                    <a href="{% url 'catalog:product_list' %}" class="btn btn-primary w-100">{% trans "Continue shopping" %}</a>
                 </div>
             </div>
         </div>

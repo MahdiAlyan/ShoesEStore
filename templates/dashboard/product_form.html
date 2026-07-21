@@ -6,180 +6,170 @@
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="row g-6">
-        <div class="col-lg-7">
-            <div class="card border mb-6"><div class="card-body">
-                <h3 class="fs-5 fw-bold mb-4">{% trans "Details" %}</h3>
+    <div class="dash-cols">
+        <div class="dash-panel">
+            <div class="panel-head"><h3 class="panel-title">{% trans "Details" %}</h3></div>
+            <div class="panel-body">
                 {% for field in form %}
-                    <div class="mb-4">
+                    <div class="field">
                         {% if field.name == 'is_active' %}
-                            <div class="form-check">{{ field }}<label class="form-check-label ms-2" for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                            <label class="checkbox-row">{{ field }}<span>{{ field.label }}</span></label>
                         {% else %}
-                            <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {{ field }}
                         {% endif %}
-                        {% for e in field.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
+                        {% for e in field.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
                     </div>
                 {% endfor %}
-            </div></div>
+            </div>
         </div>
 
-        <div class="col-lg-5">
+        <div>
             {# ===== Variants ===== #}
-            <div class="card border mb-6"><div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fs-5 fw-bold m-0">{% trans "Variants & stock" %}</h3>
+            <div class="dash-panel" style="margin-block-end:var(--space-5)">
+                <div class="panel-head">
+                    <h3 class="panel-title">{% trans "Variants & stock" %}</h3>
                     {% if product %}
-                        <button type="button" class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#bulk-variants-modal">
-                            <i class="ki-duotone ki-plus fs-5"></i>{% trans "Add variants" %}
-                        </button>
+                        <button type="button" class="btn btn-sm btn-light-primary" id="bulk-open">{% trans "Add variants" %}</button>
                     {% else %}
-                        <span class="fs-8 text-muted">{% trans "Save the product to bulk-add variants." %}</span>
+                        <span class="cell-sub">{% trans "Save the product to bulk-add variants." %}</span>
                     {% endif %}
                 </div>
-                {{ variants.management_form }}
-                {% if variants.non_form_errors %}<div class="alert alert-danger">{{ variants.non_form_errors }}</div>{% endif %}
-                <div class="table-responsive"><table class="table table-sm align-middle">
-                    <thead><tr class="text-muted fs-8"><th>{% trans "Color" %}</th><th>{% trans "Size" %}</th><th>{% trans "SKU" %}</th><th>{% trans "Stock" %}</th><th>{% trans "Del" %}</th></tr></thead>
-                    <tbody>
-                    {% for vf in variants %}
-                        <tr>
-                            {% for hidden in vf.hidden_fields %}{{ hidden }}{% endfor %}
-                            <td>{{ vf.color }}</td><td>{{ vf.size }}</td><td>{{ vf.sku }}</td><td>{{ vf.stock }}</td>
-                            <td class="text-center">{% if vf.instance.pk %}{{ vf.DELETE }}{% endif %}</td>
-                        </tr>
-                        {% if vf.errors %}<tr><td colspan="5"><div class="text-danger fs-8">{{ vf.errors }}</div></td></tr>{% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table></div>
-                <div class="text-muted fs-8">{% trans "Add a blank row's fields to create a new variant." %}</div>
-            </div></div>
+                <div class="panel-body">
+                    {{ variants.management_form }}
+                    {% if variants.non_form_errors %}<div class="form-alert form-alert-danger">{{ variants.non_form_errors }}</div>{% endif %}
+                    <div class="table-wrap">
+                        <table class="dash-table dash-table--compact">
+                            <thead><tr><th>{% trans "Color" %}</th><th>{% trans "Size" %}</th><th>{% trans "SKU" %}</th><th>{% trans "Stock" %}</th><th>{% trans "Del" %}</th></tr></thead>
+                            <tbody>
+                            {% for vf in variants %}
+                                <tr>
+                                    {% for hidden in vf.hidden_fields %}{{ hidden }}{% endfor %}
+                                    <td>{{ vf.color }}</td><td>{{ vf.size }}</td><td>{{ vf.sku }}</td><td>{{ vf.stock }}</td>
+                                    <td style="text-align:center">{% if vf.instance.pk %}{{ vf.DELETE }}{% endif %}</td>
+                                </tr>
+                                {% if vf.errors %}<tr><td colspan="5"><div class="invalid-feedback">{{ vf.errors }}</div></td></tr>{% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cell-sub" style="margin-block-start:var(--space-3)">{% trans "Add a blank row's fields to create a new variant." %}</div>
+                </div>
+            </div>
 
             {# ===== Images ===== #}
-            <div class="card border"><div class="card-body">
-                <h3 class="fs-5 fw-bold mb-4">{% trans "Images" %}</h3>
-                {{ images.management_form }}
-                {% for imf in images %}
-                    <div class="border rounded p-3 mb-3">
-                        {% for hidden in imf.hidden_fields %}{{ hidden }}{% endfor %}
-                        <div class="mb-2">{{ imf.image }}</div>
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="fs-8 text-muted">{% trans "Color" %}</span>{{ imf.color }}
-                            <label class="form-check-label fs-8">{{ imf.is_main }} {% trans "Main" %}</label>
-                            {% if imf.instance.pk %}<label class="form-check-label fs-8 text-danger">{{ imf.DELETE }} {% trans "Delete" %}</label>{% endif %}
+            <div class="dash-panel">
+                <div class="panel-head"><h3 class="panel-title">{% trans "Images" %}</h3></div>
+                <div class="panel-body">
+                    {{ images.management_form }}
+                    {% for imf in images %}
+                        <div class="image-row">
+                            {% for hidden in imf.hidden_fields %}{{ hidden }}{% endfor %}
+                            <div class="field" style="margin-block-end:var(--space-2)">{{ imf.image }}</div>
+                            <div class="image-row-controls">
+                                <span class="cell-sub">{% trans "Color" %}</span>{{ imf.color }}
+                                <label class="checkbox-row cell-sub">{{ imf.is_main }} {% trans "Main" %}</label>
+                                {% if imf.instance.pk %}<label class="checkbox-row cell-sub" style="color:var(--color-danger)">{{ imf.DELETE }} {% trans "Delete" %}</label>{% endif %}
+                            </div>
+                            {% if imf.errors %}<div class="invalid-feedback">{{ imf.errors }}</div>{% endif %}
                         </div>
-                        {% if imf.errors %}<div class="text-danger fs-8 mt-1">{{ imf.errors }}</div>{% endif %}
-                    </div>
-                {% endfor %}
-            </div></div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="d-flex gap-3 mt-6">
+    <div class="dash-form-actions">
         <button type="submit" class="btn btn-primary">{% trans "Save product" %}</button>
-        <a href="{% url 'dashboard:products' %}" class="btn btn-light">{% trans "Cancel" %}</a>
+        <a href="{% url 'dashboard:products' %}" class="btn btn-ghost">{% trans "Cancel" %}</a>
     </div>
 </form>
 
 {% if product %}
-{# ===== Bulk "Add variants" modal (M6.3) ===== #}
-<div class="modal fade" id="bulk-variants-modal" tabindex="-1" aria-hidden="true" aria-labelledby="bulk-variants-title">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title fs-4 fw-bold" id="bulk-variants-title">{% trans "Add variants" %}</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+{# ===== Bulk "Add variants" modal ===== #}
+<dialog class="dialog pay-modal" id="bulk-variants-modal" aria-labelledby="bulk-variants-title">
+    <div class="pay-modal-head">
+        <h2 class="pay-modal-title" id="bulk-variants-title">{% trans "Add variants" %}</h2>
+        <button type="button" class="pay-modal-close" data-bulk-close aria-label="{% trans 'Close' %}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+    </div>
+    <div class="pay-modal-body">
+        <p class="cell-sub" style="margin-block-end:var(--space-4)">{% trans "Generates every color × size combination that doesn't already exist." %}</p>
+        <div class="field">
+            <label class="form-label" for="bulk-colors">{% trans "Colors" %}</label>
+            <select id="bulk-colors" multiple size="4">
+                {% for c in all_colors %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label class="form-label" for="bulk-sizes">{% trans "Sizes" %}</label>
+            <select id="bulk-sizes" multiple size="4">
+                {% for s in all_sizes %}<option value="{{ s.id }}">{{ s.value }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="filter-row">
+            <div class="field">
+                <label class="form-label" for="bulk-stock">{% trans "Default stock" %}</label>
+                <input type="number" id="bulk-stock" value="0" min="0" />
             </div>
-            <div class="modal-body">
-                <div class="fs-7 text-muted mb-4">{% trans "Generates every color × size combination that doesn't already exist." %}</div>
-                <div class="mb-4">
-                    <label class="form-label fw-semibold" for="bulk-colors">{% trans "Colors" %}</label>
-                    <select id="bulk-colors" class="form-select" multiple data-no-select2 data-placeholder="{% trans 'Select colors' %}">
-                        {% for c in all_colors %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label fw-semibold" for="bulk-sizes">{% trans "Sizes" %}</label>
-                    <select id="bulk-sizes" class="form-select" multiple data-no-select2 data-placeholder="{% trans 'Select sizes' %}">
-                        {% for s in all_sizes %}<option value="{{ s.id }}">{{ s.value }}</option>{% endfor %}
-                    </select>
-                </div>
-                <div class="row g-4">
-                    <div class="col-6">
-                        <label class="form-label fw-semibold" for="bulk-stock">{% trans "Default stock" %}</label>
-                        <input type="number" id="bulk-stock" class="form-control" value="0" min="0" />
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label fw-semibold" for="bulk-prefix">{% trans "SKU prefix (optional)" %}</label>
-                        <input type="text" id="bulk-prefix" class="form-control" placeholder="{{ product.slug }}" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
-                <button type="button" class="btn btn-primary" id="bulk-submit"
-                        data-url="/api/admin/products/{{ product.pk }}/variants/bulk/"
-                        data-result-tmpl="{% trans '{created} variants created, {skipped} skipped.' %}"
-                        data-need-msg="{% trans 'Select at least one color and one size.' %}">
-                    {% trans "Create variants" %}
-                </button>
+            <div class="field">
+                <label class="form-label" for="bulk-prefix">{% trans "SKU prefix (optional)" %}</label>
+                <input type="text" id="bulk-prefix" placeholder="{{ product.slug }}" />
             </div>
         </div>
     </div>
-</div>
+    <div class="pay-modal-foot" style="display:flex;gap:var(--space-3)">
+        <button type="button" class="btn btn-ghost w-100" data-bulk-close>{% trans "Cancel" %}</button>
+        <button type="button" class="btn btn-primary w-100" id="bulk-submit"
+                data-url="/api/admin/products/{{ product.pk }}/variants/bulk/"
+                data-result-tmpl="{% trans '{created} variants created, {skipped} skipped.' %}"
+                data-need-msg="{% trans 'Select at least one color and one size.' %}">
+            {% trans "Create variants" %}
+        </button>
+    </div>
+</dialog>
 {% endif %}
 {% endblock %}
 
 {% block extra_js %}
 <script>
 (function () {
-    var jq = window.jQuery;
     var modalEl = document.getElementById("bulk-variants-modal");
     var submit = document.getElementById("bulk-submit");
-    if (!modalEl || !submit || !jq) { return; }
-    var rtl = !!(window.SS && window.SS.rtl);
+    if (!modalEl || !submit) { return; }
+    var UI = window.ShoeStore || {};
+    var open = UI.openDialog || function (d) { d.setAttribute("open", ""); };
+    var close = UI.closeDialog || function (d) { d.removeAttribute("open"); };
 
-    // Initialize the multi-selects when the modal is visible (avoids width:0).
-    jq(modalEl).on("shown.bs.modal", function () {
-        jq(modalEl).find("select").each(function () {
-            var $s = jq(this);
-            if (!$s.hasClass("select2-hidden-accessible")) {
-                $s.select2({ dir: rtl ? "rtl" : "ltr", width: "100%", dropdownParent: jq(modalEl), placeholder: $s.data("placeholder") });
-            }
-        });
+    var openBtn = document.getElementById("bulk-open");
+    if (openBtn) { openBtn.addEventListener("click", function () { open(modalEl); }); }
+    modalEl.querySelectorAll("[data-bulk-close]").forEach(function (b) {
+        b.addEventListener("click", function () { close(modalEl); });
     });
 
+    function vals(id) {
+        return Array.from(document.getElementById(id).selectedOptions).map(function (o) { return o.value; });
+    }
+
     submit.addEventListener("click", function () {
-        var colorIds = jq("#bulk-colors").val() || [];
-        var sizeIds = jq("#bulk-sizes").val() || [];
-        if (!colorIds.length || !sizeIds.length) {
-            window.ShoeStore.alert("warning", submit.dataset.needMsg, "");
-            return;
-        }
+        var colorIds = vals("bulk-colors"), sizeIds = vals("bulk-sizes");
+        if (!colorIds.length || !sizeIds.length) { UI.alert("warning", submit.dataset.needMsg, ""); return; }
         var stock = parseInt(document.getElementById("bulk-stock").value || "0", 10) || 0;
         var prefix = document.getElementById("bulk-prefix").value || "";
+        var i18n = (window.SS && window.SS.i18n) || {};
         submit.disabled = true;
-        fetch(submit.dataset.url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-CSRFToken": window.CSRF_TOKEN || "" },
-            credentials: "same-origin",
-            body: JSON.stringify({ color_ids: colorIds, size_ids: sizeIds, stock: stock, sku_prefix: prefix }),
-        }).then(function (r) {
-            return r.json().then(function (d) { return { ok: r.ok, d: d }; });
-        }).then(function (res) {
-            submit.disabled = false;
-            if (res.ok) {
-                var msg = submit.dataset.resultTmpl
-                    .replace("{created}", res.d.created).replace("{skipped}", res.d.skipped);
-                bootstrap.Modal.getOrCreateInstance(modalEl).hide();
-                if (window.Swal) {
-                    window.Swal.fire({ icon: "success", title: (window.SS && window.SS.i18n.success) || "Success", text: msg })
-                        .then(function () { window.location.reload(); });
-                } else { window.location.reload(); }
-            } else {
-                window.ShoeStore.alert("error", (window.SS && window.SS.i18n.error) || "Error", res.d.detail || "");
-            }
-        });
+        UI.api(submit.dataset.url, "POST", { color_ids: colorIds, size_ids: sizeIds, stock: stock, sku_prefix: prefix })
+            .then(function (res) {
+                submit.disabled = false;
+                if (res.ok) {
+                    var msg = submit.dataset.resultTmpl.replace("{created}", res.data.created).replace("{skipped}", res.data.skipped);
+                    close(modalEl);
+                    UI.alert("success", i18n.success || "Success", msg).then(function () { window.location.reload(); });
+                } else {
+                    UI.alert("error", i18n.error || "Error", (res.data && res.data.detail) || "");
+                }
+            });
     });
 })();
 </script>

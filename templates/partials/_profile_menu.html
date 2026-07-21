@@ -1,39 +1,39 @@
 {% load i18n %}
 {% comment %}
-Circular icon-only account dropdown (M7). Pass on_dashboard=True from the
-dashboard header so staff get a "Storefront" link instead of "Dashboard".
+Account dropdown (rebuilt without Bootstrap: [data-menu] markup driven by
+ui.js). Pass on_dashboard=True from the dashboard header so staff get a
+"Storefront" link instead of "Dashboard".
 {% endcomment %}
 {% url 'orders:my_orders' as my_orders_url %}
 {% url 'accounts:logout' as logout_url %}
 {% url 'dashboard:overview' as dashboard_url %}
 {% url 'catalog:home' as store_home_url %}
-<div class="dropdown">
-    <button class="btn btn-icon btn-light rounded-circle" type="button" data-bs-toggle="dropdown"
-            data-bs-display="static" aria-expanded="false" aria-label="{% trans 'Account' %}">
-        <i class="ki-duotone ki-profile-circle fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+<div class="menu" data-menu>
+    <button class="btn btn-light btn-icon rounded-circle" type="button" data-menu-btn
+            aria-expanded="false" aria-haspopup="true" aria-controls="profile_menu_panel"
+            aria-label="{% trans 'Account' %}">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>
+        </svg>
     </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow profile-menu">
-        <li>
-            <span class="dropdown-item-text">
-                <span class="d-block fs-8 text-muted">{% trans "Signed in as" %}</span>
-                <span class="d-block fw-semibold text-gray-900 text-break">{{ user.email }}</span>
-            </span>
-        </li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{{ my_orders_url|default:'/orders/mine/' }}">{% trans "My Orders" %}</a></li>
+    <div class="menu-panel" id="profile_menu_panel" hidden>
+        <div class="menu-header">
+            {% trans "Signed in as" %}
+            <strong>{{ user.email }}</strong>
+        </div>
+        <hr class="menu-sep" />
+        <a class="menu-item" href="{{ my_orders_url }}">{% trans "My Orders" %}</a>
         {% if user.is_staff %}
             {% if on_dashboard %}
-                <li><a class="dropdown-item" href="{{ store_home_url|default:'/' }}">{% trans "Storefront" %}</a></li>
+                <a class="menu-item" href="{{ store_home_url }}">{% trans "Storefront" %}</a>
             {% else %}
-                <li><a class="dropdown-item" href="{{ dashboard_url|default:'/dashboard/' }}">{% trans "Dashboard" %}</a></li>
+                <a class="menu-item" href="{{ dashboard_url }}">{% trans "Dashboard" %}</a>
             {% endif %}
         {% endif %}
-        <li><hr class="dropdown-divider"></li>
-        <li>
-            <form action="{{ logout_url|default:'/accounts/logout/' }}" method="post" class="px-3 py-1">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-light-danger w-100">{% trans "Log out" %}</button>
-            </form>
-        </li>
-    </ul>
+        <hr class="menu-sep" />
+        <form action="{{ logout_url }}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-light-danger btn-sm w-100">{% trans "Log out" %}</button>
+        </form>
+    </div>
 </div>

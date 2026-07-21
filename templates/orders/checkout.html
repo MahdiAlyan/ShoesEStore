@@ -4,111 +4,110 @@
 {% block title %}{% trans "Checkout" %} — {% trans "ShoeStore" %}{% endblock %}
 
 {% block content %}
-<div class="container-xxl py-8">
-    <h1 class="fs-2 fw-bold mb-6">{% trans "Checkout" %}</h1>
-    <form method="post" novalidate>
+<div class="container section">
+    <h1 class="section-title" style="margin-block-end:var(--space-6)">{% trans "Checkout" %}</h1>
+    <form method="post" novalidate class="checkout-layout">
         {% csrf_token %}
-        <div class="row g-6">
-            {# ===== Delivery + payment ===== #}
-            <div class="col-lg-7">
-                <div class="card border mb-6">
-                    <div class="card-body">
-                        <h2 class="fs-4 fw-bold mb-5">{% trans "Delivery details" %}</h2>
 
-                        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+        {# ===== Delivery + payment ===== #}
+        <div class="checkout-main">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{% trans "Delivery details" %}</h2>
 
-                        <div class="mb-5">
-                            <label class="form-label fw-semibold" for="{{ form.receiver_name.id_for_label }}">{{ form.receiver_name.label }}</label>
-                            {{ form.receiver_name }}
-                            {% for e in form.receiver_name.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
-                        </div>
-                        <div class="mb-5">
-                            <label class="form-label fw-semibold" for="{{ form.receiver_phone.id_for_label }}">{{ form.receiver_phone.label }}</label>
-                            {{ form.receiver_phone }}
-                            <div class="form-text">{{ form.receiver_phone.help_text }}</div>
-                            {% for e in form.receiver_phone.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
-                        </div>
-                        <div class="mb-5">
-                            <label class="form-label fw-semibold" for="{{ form.region.id_for_label }}">{{ form.region.label }}</label>
-                            <select name="region" id="id_region" class="form-select" data-fees>
-                                <option value="">{% trans "Select a region" %}</option>
-                                {% for r in regions %}
-                                    <option value="{{ r.id }}" data-fee="{{ r.delivery_fee }}"
-                                        {% if form.region.value|stringformat:'s' == r.id|stringformat:'s' %}selected{% endif %}>
-                                        {{ r.name }} — {{ r.delivery_fee|money }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            {% for e in form.region.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label fw-semibold" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
-                            {{ form.address }}
-                            {% for e in form.address.errors %}<div class="text-danger fs-7 mt-1">{{ e }}</div>{% endfor %}
-                        </div>
+                    {% if form.non_field_errors %}<div class="form-alert form-alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+
+                    <div class="field">
+                        <label class="form-label" for="{{ form.receiver_name.id_for_label }}">{{ form.receiver_name.label }}</label>
+                        {{ form.receiver_name }}
+                        {% for e in form.receiver_name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
                     </div>
-                </div>
-
-                <div class="card border">
-                    <div class="card-body">
-                        <h2 class="fs-4 fw-bold mb-5">{% trans "Payment method" %}</h2>
-                        <label class="d-flex align-items-center gap-3 border rounded p-4 mb-3 cursor-pointer">
-                            <input type="radio" name="payment_method" id="pm-cod" value="COD" class="form-check-input m-0" checked />
-                            <span>
-                                <span class="fw-bold d-block">{% trans "Cash on Delivery" %}</span>
-                                <span class="text-muted fs-7">{% trans "Pay in cash when your order arrives." %}</span>
-                            </span>
-                        </label>
-                        <label class="d-flex align-items-center gap-3 border rounded p-4 cursor-pointer">
-                            <input type="radio" name="payment_method" id="pm-online" value="ONLINE" class="form-check-input m-0" />
-                            <span>
-                                <span class="fw-bold d-block">{% trans "Online Payment" %}</span>
-                                <span class="text-muted fs-7">{% trans "Card payment (coming soon)." %}</span>
-                            </span>
-                        </label>
-                        {% include "partials/_turnstile.html" %}
+                    <div class="field">
+                        <label class="form-label" for="{{ form.receiver_phone.id_for_label }}">{{ form.receiver_phone.label }}</label>
+                        {{ form.receiver_phone }}
+                        <div class="form-text">{{ form.receiver_phone.help_text }}</div>
+                        {% for e in form.receiver_phone.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                    </div>
+                    <div class="field">
+                        <label class="form-label" for="{{ form.region.id_for_label }}">{{ form.region.label }}</label>
+                        <select name="region" id="id_region" data-fees>
+                            <option value="">{% trans "Select a region" %}</option>
+                            {% for r in regions %}
+                                <option value="{{ r.id }}" data-fee="{{ r.delivery_fee }}"
+                                    {% if form.region.value|stringformat:'s' == r.id|stringformat:'s' %}selected{% endif %}>
+                                    {{ r.name }} — {{ r.delivery_fee|money }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% for e in form.region.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+                    </div>
+                    <div class="field" style="margin-block-end:0">
+                        <label class="form-label" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                        {{ form.address }}
+                        {% for e in form.address.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
                     </div>
                 </div>
             </div>
 
-            {# ===== Summary ===== #}
-            <div class="col-lg-5">
-                <div class="card border">
-                    <div class="card-body">
-                        <h2 class="fs-4 fw-bold mb-5">{% trans "Order summary" %}</h2>
-                        <div class="mb-4">
-                            {% for item in items %}
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-gray-700">{{ item.variant.product.name }}
-                                        <span class="text-muted fs-8">{{ item.variant.color.name }} · {{ item.variant.size.value }} × {{ item.quantity }}</span>
-                                    </span>
-                                    <span class="fw-semibold">{{ item.line_total|money }}</span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="separator my-3"></div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">{% trans "Subtotal" %}</span>
-                            <span class="fw-semibold">{{ cart.subtotal|money }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">{% trans "Delivery" %}</span>
-                            <span class="fw-semibold" id="summary-delivery">$0.00</span>
-                        </div>
-                        <div class="d-flex justify-content-between fs-4 fw-bold mt-3">
-                            <span>{% trans "Total" %}</span>
-                            <span id="summary-total">{{ cart.subtotal|money }}</span>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-5">{% trans "Place order" %}</button>
-                        <a href="{% url 'cart:detail' %}" class="btn btn-light w-100 mt-2">{% trans "Back to cart" %}</a>
-                    </div>
+            <div class="card" style="margin-block-start:var(--space-5)">
+                <div class="card-body">
+                    <h2 class="card-title">{% trans "Payment method" %}</h2>
+                    <label class="pay-option">
+                        <input type="radio" name="payment_method" id="pm-cod" value="COD" checked />
+                        <span class="pay-option-text">
+                            <span class="pay-option-name">{% trans "Cash on Delivery" %}</span>
+                            <span class="pay-option-desc">{% trans "Pay in cash when your order arrives." %}</span>
+                        </span>
+                    </label>
+                    <label class="pay-option">
+                        <input type="radio" name="payment_method" id="pm-online" value="ONLINE" />
+                        <span class="pay-option-text">
+                            <span class="pay-option-name">{% trans "Online Payment" %}</span>
+                            <span class="pay-option-desc">{% trans "Card payment (coming soon)." %}</span>
+                        </span>
+                    </label>
+                    {% include "partials/_turnstile.html" %}
                 </div>
             </div>
         </div>
+
+        {# ===== Summary ===== #}
+        <aside class="checkout-summary">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{% trans "Order summary" %}</h2>
+                    <div class="checkout-items">
+                        {% for item in items %}
+                            <div class="checkout-item">
+                                <span class="checkout-item-name">{{ item.variant.product.name }}
+                                    <span class="checkout-item-meta">{{ item.variant.color.name }} · {{ item.variant.size.value }} × {{ item.quantity }}</span>
+                                </span>
+                                <span class="fw-semibold tnum">{{ item.line_total|money }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr class="menu-sep" />
+                    <div class="cart-summary-row">
+                        <span class="text-muted">{% trans "Subtotal" %}</span>
+                        <span class="fw-semibold tnum">{{ cart.subtotal|money }}</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span class="text-muted">{% trans "Delivery" %}</span>
+                        <span class="fw-semibold tnum" id="summary-delivery">$0.00</span>
+                    </div>
+                    <div class="cart-summary-row checkout-total">
+                        <span>{% trans "Total" %}</span>
+                        <span class="tnum" id="summary-total">{{ cart.subtotal|money }}</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100" style="margin-block-start:var(--space-4)">{% trans "Place order" %}</button>
+                    <a href="{% url 'cart:detail' %}" class="btn btn-ghost w-100" style="margin-block-start:var(--space-2)">{% trans "Back to cart" %}</a>
+                </div>
+            </div>
+        </aside>
     </form>
 </div>
 
-{# ===== Online-payment modal (M3): visual-only, no order is ever placed online ===== #}
+{# ===== Online-payment modal: visual-only, no order is ever placed online ===== #}
 {% comment %}
   INTENTIONAL: The card inputs in this modal are a NON-FUNCTIONAL visual placeholder.
   - They deliberately have NO `name` attributes.
@@ -116,76 +115,71 @@
     No card data is ever transmitted or persisted anywhere.
   - Do NOT add name attributes, a submit handler, or any fetch/XHR here.
 {% endcomment %}
-<div class="modal fade" id="online-payment-modal" tabindex="-1" aria-hidden="true" aria-labelledby="online-payment-title">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title fs-4 fw-bold" id="online-payment-title">{% trans "Card details" %}</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+<dialog id="online-payment-modal" class="dialog pay-modal" aria-labelledby="pay-modal-title">
+    <div class="pay-modal-head">
+        <h2 class="pay-modal-title" id="pay-modal-title">{% trans "Card details" %}</h2>
+        <button type="button" class="pay-modal-close" data-pay-close aria-label="{% trans 'Close' %}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+    </div>
+    <div class="pay-modal-body">
+        <div class="pay-note">
+            <div class="fw-bold">{% trans "Online payment is coming soon." %}</div>
+            <div dir="rtl">الدفع الإلكتروني قريباً. الرجاء اختيار الدفع عند الاستلام.</div>
+        </div>
+        {# Visual-only inputs: no name attributes, no submission. #}
+        <div class="field">
+            <label class="form-label">{% trans "Card number" %}</label>
+            <input type="text" placeholder="4242 4242 4242 4242" autocomplete="off" disabled />
+        </div>
+        <div class="filter-row">
+            <div class="field">
+                <label class="form-label">{% trans "Expiry" %}</label>
+                <input type="text" placeholder="MM / YY" autocomplete="off" disabled />
             </div>
-            <div class="modal-body">
-                <div class="alert alert-warning d-flex align-items-center">
-                    <i class="ki-duotone ki-information fs-2x me-3"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
-                    <div>
-                        <div class="fw-bold">{% trans "Online payment is coming soon." %}</div>
-                        <div class="fs-7" dir="rtl">الدفع الإلكتروني قريباً. الرجاء اختيار الدفع عند الاستلام.</div>
-                    </div>
-                </div>
-
-                {# Visual-only inputs: no name attributes, no submission. #}
-                <div class="mb-5">
-                    <label class="form-label fw-semibold">{% trans "Card number" %}</label>
-                    <input type="text" class="form-control" placeholder="4242 4242 4242 4242" autocomplete="off" disabled />
-                </div>
-                <div class="row g-4 mb-2">
-                    <div class="col-6">
-                        <label class="form-label fw-semibold">{% trans "Expiry" %}</label>
-                        <input type="text" class="form-control" placeholder="MM / YY" autocomplete="off" disabled />
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label fw-semibold">{% trans "CVV" %}</label>
-                        <input type="text" class="form-control" placeholder="123" autocomplete="off" disabled />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary w-100" id="continue-cod">
-                    {% trans "Continue with Cash on Delivery" %}
-                </button>
+            <div class="field">
+                <label class="form-label">{% trans "CVV" %}</label>
+                <input type="text" placeholder="123" autocomplete="off" disabled />
             </div>
         </div>
     </div>
-</div>
+    <div class="pay-modal-foot">
+        <button type="button" class="btn btn-primary w-100" id="continue-cod">
+            {% trans "Continue with Cash on Delivery" %}
+        </button>
+    </div>
+</dialog>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 (function () {
-    // ----- Online-payment modal (M3): keeps checkout COD-only -----
+    // ----- Online-payment modal (visual-only): keeps checkout COD-only -----
     var codRadio = document.getElementById("pm-cod");
     var onlineRadio = document.getElementById("pm-online");
     var modalEl = document.getElementById("online-payment-modal");
-    if (onlineRadio && modalEl && window.bootstrap) {
-        var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    var UI = window.ShoeStore || {};
+    var open = UI.openDialog || function (d) { d.setAttribute("open", ""); };
+    var close = UI.closeDialog || function (d) { d.removeAttribute("open"); };
+    if (onlineRadio && modalEl) {
         var selectCod = function () { if (codRadio) codRadio.checked = true; };
-        // Selecting "Online Payment" opens the modal.
         onlineRadio.addEventListener("change", function () {
-            if (onlineRadio.checked) modal.show();
+            if (onlineRadio.checked) { open(modalEl); }
         });
-        // "Continue with Cash on Delivery" reverts to COD and closes.
         var contBtn = document.getElementById("continue-cod");
-        if (contBtn) contBtn.addEventListener("click", function () { selectCod(); modal.hide(); });
-        // Dismissing the modal any other way also reverts to COD (never leave ONLINE selected).
-        modalEl.addEventListener("hidden.bs.modal", function () {
-            if (onlineRadio.checked) selectCod();
+        if (contBtn) { contBtn.addEventListener("click", function () { selectCod(); close(modalEl); }); }
+        modalEl.querySelectorAll("[data-pay-close]").forEach(function (b) {
+            b.addEventListener("click", function () { close(modalEl); });
         });
-        // Defensive: if ONLINE is somehow still selected at submit, open the modal instead.
+        // Any dismissal reverts to COD — ONLINE is never a submittable state.
+        modalEl.addEventListener("close", function () { if (onlineRadio.checked) { selectCod(); } });
         var form = onlineRadio.closest("form");
-        if (form) form.addEventListener("submit", function (e) {
-            if (onlineRadio.checked) { e.preventDefault(); modal.show(); }
-        });
+        if (form) { form.addEventListener("submit", function (e) {
+            if (onlineRadio.checked) { e.preventDefault(); open(modalEl); }
+        }); }
     }
 
+    // ----- Live delivery fee + total -----
     var subtotal = parseFloat("{{ cart.subtotal|stringformat:'f' }}") || 0;
     var region = document.getElementById("id_region");
     var deliveryEl = document.getElementById("summary-delivery");
@@ -194,14 +188,12 @@
     function update() {
         var opt = region.options[region.selectedIndex];
         var fee = opt ? parseFloat(opt.getAttribute("data-fee") || "0") : 0;
-        if (isNaN(fee)) fee = 0;
+        if (isNaN(fee)) { fee = 0; }
         deliveryEl.textContent = fmt(fee);
         totalEl.textContent = fmt(subtotal + fee);
     }
     if (region) {
-        // Bind via jQuery so select2's change event updates the delivery fee.
-        if (window.jQuery) { window.jQuery(region).on("change", update); }
-        else { region.addEventListener("change", update); }
+        region.addEventListener("change", update);
         update();
     }
 })();

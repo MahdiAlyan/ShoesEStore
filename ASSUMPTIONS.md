@@ -137,3 +137,64 @@ default OFF, SQLite for demo only, seed admin creds documented) are all adopted 
   should configure a shared cache (Redis/memcached) so `5/min/IP` is global. `?next=` redirects
   are validated with `url_has_allowed_host_and_scheme` (rejects absolute, protocol-relative, and
   backslash-normalized cross-origin targets).
+## UI Refactor
+- **U1.** (M0/M1) Fonts are self-hosted woff2 downloaded from the Google Fonts
+  static API (no npm/build step): Fraunces 600 latin, Inter variable latin
+  (one file, weight range 100–900 — Google serves the same variable file for
+  every requested weight), IBM Plex Sans Arabic 400/500/700 arabic subset.
+  `unicode-range` keeps the Arabic faces undownloaded on pure-LTR pages and
+  vice versa.
+- **U2.** (M1) The new design system deliberately reuses the Bootstrap-era
+  class spellings already present in templates (`.btn-primary`, `.btn-light`,
+  `.badge`, `.form-label`, `.d-none`, `.w-100`…) with custom implementations,
+  so pages awaiting their milestone inherit the new look without markup churn.
+  `.d-none` is a permanent utility (cart.js toggles it on `#cart-badge`).
+- **U3.** (M1) select2 is gone; every `<select>` is a styled **native** select
+  (custom chevron). Mobile browsers now show native pickers — intentional.
+  Leftover `data-no-select2` attributes are inert and get removed as each page
+  is rebuilt.
+- **U4.** (M1) SweetAlert2/Bootstrap JS are gone. `ui.js` reimplements
+  `ShoeStore.toast/alert/confirm` with identical signatures on custom toasts +
+  native `<dialog>`, so cart.js/dashboard.js run unmodified until their own
+  rewrite milestones (M2/M4).
+- **U5.** (M1) Known temporary gaps until their milestone: the checkout
+  online-payment modal doesn't open (its JS is guarded by `window.bootstrap`;
+  the server still bounces `payment_method=ONLINE`, so COD checkout is
+  unaffected — rebuilt in M3), and the dashboard bulk-variants modal doesn't
+  open (`data-bs-toggle` trigger is inert; the normal variant formset still
+  works — rebuilt in M4). Inner pages look unstyled-but-functional until
+  M2–M4; base.css styles raw form/table elements to keep them usable.
+- **U6.** (M1) Metronic assets remain on disk (`theme_static/`) and in
+  `STATICFILES_DIRS` until the M6 cutover, but no template loads them except
+  the standalone `500.html` (rebuilt in M2). `site.js`, `custom.css`, and
+  `rtl.css` are deleted — RTL now comes from CSS logical properties in the one
+  stylesheet set (physical properties only with a justifying comment).
+  Static storage stays `CompressedStaticFilesStorage` until Metronic (with its
+  broken internal refs) is gone; revisit Manifest storage at M6.
+
+## UI Rework (defect-driven)
+- **U7.** Chrome DevTools MCP was not connected in the rework environment; per the
+  spec's fallback, all render→screenshot→inspect→fix verification used real
+  Chromium via Playwright (screenshots + console + network capture). Evidence
+  lives in `ui_audit/` (before), `ui_audit/fix/` (per-fix), `ui_audit/final/`
+  (full re-sweep) and `UI_DEFECTS.md`.
+- **U8.** Global mobile horizontal-scroll fixes: `html { overflow-x: clip }`
+  clips the off-canvas drawer (a fixed element translated off the inline-end
+  edge in RTL) without breaking `position: sticky`; grid children carry
+  `min-width: 0` so wide tables scroll inside their `.table-wrap` instead of
+  stretching the track.
+- **U9.** Base form-control styling is wrapped in `:where(...)` (zero
+  specificity) so component classes (`.cart-qty`, `.lang-switcher`, bulk
+  multi-selects) override it without `!important` or specificity fights.
+- **U10.** The dashboard bulk-variants modal and the checkout online-payment
+  placeholder are now native `<dialog>` elements driven by
+  `ShoeStore.openDialog/closeDialog`; bulk uses native `<select multiple>` +
+  `ShoeStore.api` (jQuery/Bootstrap/select2/Swal fully gone). The card-input
+  security spec (no name attrs, no submit/network) is unchanged.
+- **U11.** `theme_static/` was removed from `STATICFILES_DIRS` and the Metronic
+  reference dropped from `500.html`, so `grep -ri metronic` over
+  templates/static/config/apps is clean. The `theme_static/` directory may
+  remain on disk (gitignored, unused) until a repo cleanup.
+- **U12.** New rework strings were translated to Arabic and the `.mo` compiled
+  with `polib` (GNU gettext tools are not installed in this environment; polib
+  is a pure-Python equivalent for msgfmt).
